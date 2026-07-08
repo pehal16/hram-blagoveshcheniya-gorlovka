@@ -65,14 +65,19 @@ Current payment option:
 Notification plan:
 
 - Frontend posts orders to `VITE_ORDER_ENDPOINT`.
+- Current production notification endpoint: `https://site-livid-mu-36.vercel.app/api/notify`.
+- GitHub Pages uses the repository variable `VITE_ORDER_ENDPOINT=https://site-livid-mu-36.vercel.app/api/notify`.
 - Backend template lives in `server/yandex-notify`.
 - Full note text goes to email by default.
 - Telegram can receive full note text in the closed responsible group with `SEND_FULL_TO_TELEGRAM=true`.
 - VK receives a short notification by default unless `SEND_FULL_TO_VK=true`.
 - Public Telegram contact shown on the site: `https://t.me/BlagoVhram`.
 - This public Telegram link is not enough for notification delivery; Telegram notifications still need `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
+- Service Telegram bot: `@BlagoVhramBot`.
+- Closed Telegram group for note delivery: `Записки храма`, `TELEGRAM_CHAT_ID=-5589930019`.
 - With the current SBP QR link, bank payment confirmation is manual. The frontend sends a note after the visitor marks payment as completed.
 - Vercel-compatible endpoint wrapper: `api/notify.js`, backed by `server/yandex-notify`.
+- Verified on 2026-07-08: the live GitHub Pages form sends a note to Vercel, Vercel returns `200`, and Telegram receives the test note.
 
 If Robokassa is resumed later, review:
 
