@@ -7,6 +7,7 @@ This file is the durable context for future Codex sessions. Read it before chang
 - Site folder: `C:\Users\АМ\Documents\Сайт Церкви\site`
 - Stack: React + Vite + TypeScript + lucide-react.
 - Hosting preview: GitHub Pages.
+- Target launch hosting: Timeweb for static site files and Yandex Cloud Functions for notifications.
 - Repository: `https://github.com/pehal16/hram-blagoveshcheniya-gorlovka`
 - Live preview: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
 - Vite uses `base: './'` so assets work on GitHub Pages subpaths.
@@ -80,6 +81,7 @@ Notification plan:
 - Vercel-compatible endpoint wrapper: `api/notify.js`, backed by `server/yandex-notify`.
 - Vercel `ALLOWED_ORIGIN` must include the public GitHub Pages origin plus local testing origins `http://127.0.0.1:5173` and `http://localhost:5173`.
 - Verified on 2026-07-08: the live GitHub Pages form and the local Vite form send notes to Vercel, Vercel returns `200`, and Telegram receives the test notes.
+- Next hosting migration target: Timeweb + Yandex Cloud. Use `TIMEWEB_YANDEX_CLOUD_DEPLOY.md`, `scripts/prepare-timeweb.ps1`, and `server/yandex-notify/deploy-yandex-cloud.ps1`.
 
 If Robokassa is resumed later, review:
 

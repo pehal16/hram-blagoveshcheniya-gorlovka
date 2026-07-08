@@ -3,6 +3,7 @@
 Актуальный сайт для предпросмотра и подготовки запуска:
 
 - GitHub Pages: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
+- Целевая схема запуска: Timeweb для сайта + Yandex Cloud Functions для уведомлений.
 - Основная оплата на текущем этапе: QR СБП `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
 - Robokassa пока не используется.
 - Записки отправляются ответственным после отметки пользователем оплаты по СБП.
@@ -45,3 +46,5 @@ VITE_ORDER_ENDPOINT=https://example.ru/notify
 ```text
 https://<vercel-domain>/api/notify
 ```
+
+Для боевого переезда на РФ-инфраструктуру см. `TIMEWEB_YANDEX_CLOUD_DEPLOY.md`.

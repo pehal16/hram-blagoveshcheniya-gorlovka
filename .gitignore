@@ -12,6 +12,7 @@ dist
 dist-ssr
 output
 *.local
+server/yandex-notify/yandex-cloud.env
 
 # Editor directories and files
 .vscode/*

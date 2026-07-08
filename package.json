@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:timeweb": "powershell -ExecutionPolicy Bypass -File scripts/prepare-timeweb.ps1",
     "lint": "oxlint",
     "preview": "vite preview"
   },
