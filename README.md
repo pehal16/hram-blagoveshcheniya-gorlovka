@@ -1,32 +1,39 @@
-# React + TypeScript + Vite
+# Сайт храма Благовещения Пресвятой Богородицы
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Актуальный сайт для предпросмотра и подготовки запуска:
 
-Currently, two official plugins are available:
+- GitHub Pages: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
+- Основная оплата на текущем этапе: QR СБП `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
+- Robokassa пока не используется.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Что уже есть
 
-## React Compiler
+- Подача записок с расчетом минимального пожертвования.
+- Пожертвования с быстрыми суммами.
+- Реальный QR-код СБП в `public/sbp-qr.svg`.
+- Готовность frontend к отправке заявок на backend через `VITE_ORDER_ENDPOINT`.
+- Шаблон backend для почты, Telegram и VK: `server/yandex-notify`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Запуск разработки
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```powershell
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Проверка перед публикацией
+
+```powershell
+npm run lint
+npm run build
+```
+
+## Уведомления
+
+Сайт не хранит токены Telegram/VK и пароль почты. Для отправки записок нужно развернуть серверную функцию из `server/yandex-notify` и указать ее URL в переменной сборки:
+
+```text
+VITE_ORDER_ENDPOINT=https://example.ru/notify
+```
+
+После этого заявки будут уходить в endpoint, а функция разошлет их на почту, в Telegram и VK.

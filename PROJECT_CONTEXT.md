@@ -54,15 +54,22 @@ Rules to preserve in UX:
 
 ## Payments plan
 
-Primary provider: Robokassa.
+Robokassa is postponed. The current launch path uses the provided SBP QR link.
 
-Fallback/manual options:
+Current payment option:
 
-- SBP QR.
-- Bank requisites.
-- User-provided QR link: `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
+- User-provided SBP QR link: `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
+- Local QR asset: `public/sbp-qr.svg`
+- Payment is checked manually.
 
-Before real payment integration, review:
+Notification plan:
+
+- Frontend posts orders to `VITE_ORDER_ENDPOINT`.
+- Backend template lives in `server/yandex-notify`.
+- Full note text goes to email by default.
+- Telegram and VK receive a short notification by default unless `SEND_FULL_TO_MESSENGERS=true`.
+
+If Robokassa is resumed later, review:
 
 - `C:\Users\АМ\Documents\Сайт Церкви\ROBOKASSA_интеграция.md`
 - Merchant account data.
