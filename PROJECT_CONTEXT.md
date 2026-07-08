@@ -68,6 +68,8 @@ Notification plan:
 - Backend template lives in `server/yandex-notify`.
 - Full note text goes to email by default.
 - Telegram and VK receive a short notification by default unless `SEND_FULL_TO_MESSENGERS=true`.
+- Public Telegram contact shown on the site: `https://t.me/BlagoVhram`.
+- This public Telegram link is not enough for notification delivery; Telegram notifications still need `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
 
 If Robokassa is resumed later, review:
 

@@ -98,6 +98,7 @@ const kindLabels: Record<NoteKind, string> = {
 
 const donationPresets = [100, 300, 500, 1000]
 const sbpPaymentUrl = 'https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S'
+const telegramUrl = 'https://t.me/BlagoVhram'
 const notificationEndpoint = String(import.meta.env.VITE_ORDER_ENDPOINT ?? '').trim()
 const annunciationIcon = `${import.meta.env.BASE_URL}annunciation.png`
 const sbpQrImage = `${import.meta.env.BASE_URL}sbp-qr.svg`
@@ -711,7 +712,9 @@ function App() {
           </li>
           <li>
             <MessageCircle size={20} />
-            Telegram / VK для уведомлений
+            <a href={telegramUrl} target="_blank" rel="noreferrer">
+              Telegram: @BlagoVhram
+            </a>
           </li>
           <li>
             <SquarePlay size={20} />
