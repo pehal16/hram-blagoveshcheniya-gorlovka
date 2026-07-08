@@ -67,6 +67,7 @@ Notification plan:
 - Frontend posts orders to `VITE_ORDER_ENDPOINT`.
 - Current production notification endpoint: `https://site-livid-mu-36.vercel.app/api/notify`.
 - GitHub Pages uses the repository variable `VITE_ORDER_ENDPOINT=https://site-livid-mu-36.vercel.app/api/notify`.
+- Local Vite testing uses ignored `.env.local` with the same `VITE_ORDER_ENDPOINT`; restart `npm run dev` after changing it.
 - Backend template lives in `server/yandex-notify`.
 - Full note text goes to email by default.
 - Telegram can receive full note text in the closed responsible group with `SEND_FULL_TO_TELEGRAM=true`.
@@ -77,7 +78,8 @@ Notification plan:
 - Closed Telegram group for note delivery: `Записки храма`, `TELEGRAM_CHAT_ID=-5589930019`.
 - With the current SBP QR link, bank payment confirmation is manual. The frontend sends a note after the visitor marks payment as completed.
 - Vercel-compatible endpoint wrapper: `api/notify.js`, backed by `server/yandex-notify`.
-- Verified on 2026-07-08: the live GitHub Pages form sends a note to Vercel, Vercel returns `200`, and Telegram receives the test note.
+- Vercel `ALLOWED_ORIGIN` must include the public GitHub Pages origin plus local testing origins `http://127.0.0.1:5173` and `http://localhost:5173`.
+- Verified on 2026-07-08: the live GitHub Pages form and the local Vite form send notes to Vercel, Vercel returns `200`, and Telegram receives the test notes.
 
 If Robokassa is resumed later, review:
 

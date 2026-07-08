@@ -15,7 +15,7 @@ TELEGRAM_BOT_TOKEN=<bot token from BotFather>
 TELEGRAM_CHAT_ID=-5589930019
 SEND_FULL_TO_TELEGRAM=true
 SEND_FULL_TO_VK=false
-ALLOWED_ORIGIN=https://pehal16.github.io
+ALLOWED_ORIGIN=https://pehal16.github.io,https://site-livid-mu-36.vercel.app,http://127.0.0.1:5173,http://localhost:5173
 DRY_RUN=false
 ```
 
@@ -36,6 +36,15 @@ gh variable set VITE_ORDER_ENDPOINT --repo pehal16/hram-blagoveshcheniya-gorlovk
 ```
 
 Push or rerun GitHub Pages after setting the variable.
+
+For local Vite testing, keep this non-secret file:
+
+```text
+.env.local
+VITE_ORDER_ENDPOINT=https://site-livid-mu-36.vercel.app/api/notify
+```
+
+Restart `npm run dev` after creating or changing `.env.local`, because Vite reads env variables when the dev server starts.
 
 ## Notes
 
