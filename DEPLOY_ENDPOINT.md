@@ -2,7 +2,7 @@
 
 The site is ready to send paid-claimed notes to a backend endpoint. The Vercel-compatible wrapper is:
 
-`api/notify.cjs`
+`api/notify.js`
 
 It calls the shared notification function from:
 

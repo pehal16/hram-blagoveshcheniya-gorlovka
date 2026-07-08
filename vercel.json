@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/api/notify",
-      "destination": "/api/notify.cjs"
+      "destination": "/api/notify.js"
     }
   ]
 }

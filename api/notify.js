@@ -1,6 +1,9 @@
+import { createRequire } from 'node:module'
+
+const require = createRequire(import.meta.url)
 const { handler } = require('../server/yandex-notify')
 
-module.exports = async function notify(request, response) {
+export default async function notify(request, response) {
   const body =
     typeof request.body === 'string'
       ? request.body
