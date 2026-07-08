@@ -2,14 +2,54 @@ const nodemailer = require('nodemailer')
 
 const VK_API_VERSION = process.env.VK_API_VERSION || '5.199'
 
-function json(statusCode, body) {
+function getHeader(event, name) {
+  const headers = event.headers || {}
+  const lowerName = name.toLowerCase()
+  const match = Object.keys(headers).find((key) => key.toLowerCase() === lowerName)
+
+  return match ? headers[match] : ''
+}
+
+function getMethod(event) {
+  return event.httpMethod || event.requestContext?.http?.method || 'GET'
+}
+
+function getAllowedOrigins() {
+  return String(process.env.ALLOWED_ORIGIN || '*')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+}
+
+function isOriginAllowed(origin) {
+  const allowedOrigins = getAllowedOrigins()
+
+  if (!origin || allowedOrigins.includes('*')) {
+    return true
+  }
+
+  return allowedOrigins.includes(origin)
+}
+
+function getCorsOrigin(origin) {
+  const allowedOrigins = getAllowedOrigins()
+
+  if (origin && allowedOrigins.includes(origin)) {
+    return origin
+  }
+
+  return allowedOrigins[0] || '*'
+}
+
+function json(statusCode, body, origin) {
   return {
     statusCode,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || '*',
+      'Access-Control-Allow-Origin': getCorsOrigin(origin),
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
+      Vary: 'Origin',
     },
     body: JSON.stringify(body),
   }
@@ -146,6 +186,10 @@ function formatMessages(payload) {
 }
 
 async function sendEmail(subject, message) {
+  if (process.env.DRY_RUN === 'true') {
+    return { channel: 'email', skipped: false, dryRun: true }
+  }
+
   const required = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'MAIL_TO']
   const hasConfig = required.every((key) => process.env[key])
 
@@ -174,6 +218,10 @@ async function sendEmail(subject, message) {
 }
 
 async function sendTelegram(message) {
+  if (process.env.DRY_RUN === 'true') {
+    return { channel: 'telegram', skipped: false, dryRun: true }
+  }
+
   const token = process.env.TELEGRAM_BOT_TOKEN
   const chatId = process.env.TELEGRAM_CHAT_ID
 
@@ -199,6 +247,10 @@ async function sendTelegram(message) {
 }
 
 async function sendVk(message) {
+  if (process.env.DRY_RUN === 'true') {
+    return { channel: 'vk', skipped: false, dryRun: true }
+  }
+
   const token = process.env.VK_GROUP_TOKEN
   const peerId = process.env.VK_PEER_ID
 
@@ -227,13 +279,32 @@ async function sendVk(message) {
   return { channel: 'vk', skipped: false }
 }
 
+async function runChannel(channel, task) {
+  try {
+    return await task()
+  } catch (error) {
+    return {
+      channel,
+      skipped: false,
+      error: error instanceof Error ? error.message : 'Unknown channel error',
+    }
+  }
+}
+
 module.exports.handler = async function handler(event) {
-  if (event.httpMethod === 'OPTIONS') {
-    return json(204, {})
+  const origin = getHeader(event, 'origin')
+  const method = getMethod(event)
+
+  if (!isOriginAllowed(origin)) {
+    return json(403, { ok: false, error: 'Origin is not allowed' }, origin)
   }
 
-  if (event.httpMethod !== 'POST') {
-    return json(405, { ok: false, error: 'Method not allowed' })
+  if (method === 'OPTIONS') {
+    return json(204, {}, origin)
+  }
+
+  if (method !== 'POST') {
+    return json(405, { ok: false, error: 'Method not allowed' }, origin)
   }
 
   let payload
@@ -241,32 +312,27 @@ module.exports.handler = async function handler(event) {
   try {
     payload = parseBody(event)
   } catch {
-    return json(400, { ok: false, error: 'Invalid JSON' })
+    return json(400, { ok: false, error: 'Invalid JSON' }, origin)
   }
 
   if (payload.website) {
-    return json(200, { ok: true, ignored: true })
+    return json(200, { ok: true, ignored: true }, origin)
   }
 
   const validation = validatePayload(payload)
 
   if (!validation.ok) {
-    return json(400, { ok: false, error: validation.error })
+    return json(400, { ok: false, error: validation.error }, origin)
   }
 
   const messages = formatMessages(payload)
   const jobs = [
-    sendEmail(messages.subject, messages.full),
-    sendTelegram(messages.messenger),
-    sendVk(messages.messenger),
+    runChannel('email', () => sendEmail(messages.subject, messages.full)),
+    runChannel('telegram', () => sendTelegram(messages.messenger)),
+    runChannel('vk', () => sendVk(messages.messenger)),
   ]
 
-  const settled = await Promise.allSettled(jobs)
-  const results = settled.map((result) =>
-    result.status === 'fulfilled'
-      ? result.value
-      : { channel: 'unknown', skipped: false, error: result.reason.message },
-  )
+  const results = await Promise.all(jobs)
   const delivered = results.filter((result) => !result.skipped && !result.error)
 
   if (!delivered.length) {
@@ -274,12 +340,12 @@ module.exports.handler = async function handler(event) {
       ok: false,
       error: 'No notification channel delivered the message',
       results,
-    })
+    }, origin)
   }
 
   return json(200, {
     ok: true,
     delivered: delivered.map((result) => result.channel),
     results,
-  })
+  }, origin)
 }

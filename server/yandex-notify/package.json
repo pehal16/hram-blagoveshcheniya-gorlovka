@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
+  "scripts": {
+    "start": "node local-server.js",
+    "test:dry": "node -e \"process.env.DRY_RUN='true'; process.env.ALLOWED_ORIGIN='*'; const fs=require('node:fs'); const {handler}=require('./index'); handler({httpMethod:'POST', headers:{origin:'http://127.0.0.1:5173'}, body:fs.readFileSync('./sample-note.json','utf8')}).then((r)=>{console.log(r.statusCode); console.log(r.body); if(r.statusCode!==200) process.exit(1)})\""
+  },
   "dependencies": {
     "nodemailer": "^9.0.3"
   }

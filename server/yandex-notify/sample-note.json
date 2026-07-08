@@ -1,0 +1,18 @@
+{
+  "orderId": "Z-260708-0001",
+  "flow": "note",
+  "status": "waiting_payment",
+  "createdAt": "2026-07-08T12:00:00.000Z",
+  "sourceUrl": "https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/",
+  "paymentUrl": "https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S",
+  "serviceId": "liturgy",
+  "serviceTitle": "Литургия",
+  "noteKind": "О здравии",
+  "giverName": "Мария",
+  "contact": "+7 000 000-00-00",
+  "names": ["Иоанна", "Марии", "Николая"],
+  "namesCount": 3,
+  "minimumAmount": 350,
+  "amount": 500,
+  "website": ""
+}

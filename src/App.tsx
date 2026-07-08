@@ -175,7 +175,8 @@ function App() {
   const [noteAmount, setNoteAmount] = useState(String(activeService.price))
   const [donationAmount, setDonationAmount] = useState('500')
   const [donorName, setDonorName] = useState('')
-  const [privacyAccepted, setPrivacyAccepted] = useState(false)
+  const [notePrivacyAccepted, setNotePrivacyAccepted] = useState(false)
+  const [donationPrivacyAccepted, setDonationPrivacyAccepted] = useState(false)
   const [website, setWebsite] = useState('')
   const [submission, setSubmission] = useState<SubmissionState>(initialSubmission)
 
@@ -194,10 +195,10 @@ function App() {
   const canSubmitNote =
     namesCount > 0 &&
     giverName.trim().length > 0 &&
-    privacyAccepted &&
+    notePrivacyAccepted &&
     !noteAmountTooLow &&
     !isSubmitting
-  const canSubmitDonation = donationValue > 0 && privacyAccepted && !isSubmitting
+  const canSubmitDonation = donationValue > 0 && donationPrivacyAccepted && !isSubmitting
 
   function moveHeroLight(event: PointerEvent<HTMLElement>) {
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -550,8 +551,8 @@ function App() {
 
             <label className="consent-line">
               <input
-                checked={privacyAccepted}
-                onChange={(event) => setPrivacyAccepted(event.target.checked)}
+                checked={notePrivacyAccepted}
+                onChange={(event) => setNotePrivacyAccepted(event.target.checked)}
                 type="checkbox"
                 required
               />
@@ -624,8 +625,8 @@ function App() {
             </label>
             <label className="consent-line">
               <input
-                checked={privacyAccepted}
-                onChange={(event) => setPrivacyAccepted(event.target.checked)}
+                checked={donationPrivacyAccepted}
+                onChange={(event) => setDonationPrivacyAccepted(event.target.checked)}
                 type="checkbox"
                 required
               />

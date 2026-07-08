@@ -12,8 +12,29 @@
 
 1. Развернуть эту папку как Node.js функцию в Yandex Cloud Functions или другом российском serverless/хостинге.
 2. Установить переменные окружения из `.env.example`.
-3. В настройках GitHub Pages build добавить переменную `VITE_ORDER_ENDPOINT` со ссылкой на публичный HTTP endpoint функции.
+3. В GitHub repo settings добавить repository variable `VITE_ORDER_ENDPOINT` со ссылкой на публичный HTTP endpoint функции.
 4. Проверить тестовую записку.
+
+## Локальная проверка без секретов
+
+```powershell
+npm install
+npm run test:dry
+```
+
+Для локального HTTP endpoint:
+
+```powershell
+$env:DRY_RUN="true"
+$env:ALLOWED_ORIGIN="http://127.0.0.1:5173"
+npm start
+```
+
+После этого можно собрать сайт с:
+
+```text
+VITE_ORDER_ENDPOINT=http://127.0.0.1:8787
+```
 
 ## Каналы
 
@@ -35,4 +56,4 @@
 
 ## Защита от мусора
 
-В frontend есть honeypot-поле `website`, а функция валидирует сумму, номер заявки и список имен. Для боевого запуска позже можно добавить CAPTCHA или ограничение частоты запросов.
+В frontend есть honeypot-поле `website`, функция валидирует сумму, номер заявки и список имен, а также проверяет `Origin` по `ALLOWED_ORIGIN`. Для боевого запуска позже можно добавить CAPTCHA или ограничение частоты запросов.
