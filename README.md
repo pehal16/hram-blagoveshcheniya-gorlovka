@@ -39,3 +39,9 @@ VITE_ORDER_ENDPOINT=https://example.ru/notify
 ```
 
 После этого заявки будут уходить в endpoint, а функция разошлет их на почту, в Telegram и VK.
+
+Для временного полного маршрута на Vercel endpoint будет:
+
+```text
+https://<vercel-domain>/api/notify
+```

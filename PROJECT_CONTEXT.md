@@ -72,6 +72,7 @@ Notification plan:
 - Public Telegram contact shown on the site: `https://t.me/BlagoVhram`.
 - This public Telegram link is not enough for notification delivery; Telegram notifications still need `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
 - With the current SBP QR link, bank payment confirmation is manual. The frontend sends a note after the visitor marks payment as completed.
+- Vercel-compatible endpoint wrapper: `api/notify.cjs`, backed by `server/yandex-notify`.
 
 If Robokassa is resumed later, review:
 
