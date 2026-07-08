@@ -1,6 +1,8 @@
-const nodemailer = require('nodemailer')
-
 const VK_API_VERSION = process.env.VK_API_VERSION || '5.199'
+
+function envFlag(name) {
+  return process.env[name] === 'true'
+}
 
 function getHeader(event, name) {
   const headers = event.headers || {}
@@ -91,6 +93,16 @@ function normalizeNames(value) {
   return value.map((name) => cleanText(name, 80)).filter(Boolean).slice(0, 200)
 }
 
+function formatPaymentStatus(payload) {
+  const status = cleanText(payload.status, 40)
+
+  if (status === 'paid_claimed' || payload.paymentClaimed === true) {
+    return 'Пользователь указал, что оплатил по СБП. Нужна ручная сверка поступления.'
+  }
+
+  return 'Ожидает оплаты по СБП'
+}
+
 function validatePayload(payload) {
   const flow = cleanText(payload.flow, 20)
   const orderId = cleanText(payload.orderId, 40)
@@ -118,13 +130,14 @@ function formatMessages(payload) {
   const amount = cleanAmount(payload.amount)
   const sourceUrl = cleanText(payload.sourceUrl, 300)
   const paymentUrl = cleanText(payload.paymentUrl, 300)
+  const paymentStatus = formatPaymentStatus(payload)
 
   if (flow === 'donation') {
     const donorName = cleanText(payload.donorName, 100) || 'не указано'
     const full = [
       `Пожертвование ${orderId}`,
       '',
-      'Статус: ожидает оплаты по СБП',
+      `Статус: ${paymentStatus}`,
       `Сумма: ${amount} руб.`,
       `Имя жертвователя: ${donorName}`,
       sourceUrl ? `Страница: ${sourceUrl}` : '',
@@ -136,7 +149,8 @@ function formatMessages(payload) {
     return {
       subject: `Пожертвование ${orderId}`,
       full,
-      messenger: full,
+      telegram: full,
+      vk: full,
     }
   }
 
@@ -146,12 +160,13 @@ function formatMessages(payload) {
   const giverName = cleanText(payload.giverName, 100)
   const contact = cleanText(payload.contact, 140) || 'не указан'
   const minimumAmount = cleanAmount(payload.minimumAmount)
+  const paymentClaimedAt = cleanText(payload.paymentClaimedAt, 80)
   const namesBlock = names.map((name) => `- ${name}`).join('\n')
 
   const full = [
     `Записка ${orderId}`,
     '',
-    'Статус: ожидает оплаты по СБП',
+    `Статус: ${paymentStatus}`,
     `Вид: ${serviceTitle}`,
     `Тип: ${noteKind}`,
     `Имен: ${names.length}`,
@@ -159,6 +174,7 @@ function formatMessages(payload) {
     `Указанная сумма: ${amount} руб.`,
     `Подающий: ${giverName}`,
     `Контакт: ${contact}`,
+    paymentClaimedAt ? `Отметка оплаты: ${paymentClaimedAt}` : '',
     '',
     'Имена:',
     namesBlock,
@@ -174,15 +190,45 @@ function formatMessages(payload) {
     `${serviceTitle}, ${noteKind}`,
     `Имен: ${names.length}`,
     `Сумма: ${amount} руб.`,
-    'Статус: ожидает оплаты',
+    `Статус: ${paymentStatus}`,
     'Полный текст записки отправлен на почту.',
   ].join('\n')
 
   return {
     subject: `Записка ${orderId}`,
     full,
-    messenger: process.env.SEND_FULL_TO_MESSENGERS === 'true' ? full : summary,
+    telegram: envFlag('SEND_FULL_TO_TELEGRAM') || envFlag('SEND_FULL_TO_MESSENGERS') ? full : summary,
+    vk: envFlag('SEND_FULL_TO_VK') || envFlag('SEND_FULL_TO_MESSENGERS') ? full : summary,
   }
+}
+
+function splitLongMessage(message, maxLength = 3900) {
+  if (message.length <= maxLength) {
+    return [message]
+  }
+
+  const chunks = []
+  const lines = message.split('\n')
+  let current = ''
+
+  for (const line of lines) {
+    const next = current ? `${current}\n${line}` : line
+
+    if (next.length > maxLength) {
+      if (current) {
+        chunks.push(current)
+      }
+      current = line
+    } else {
+      current = next
+    }
+  }
+
+  if (current) {
+    chunks.push(current)
+  }
+
+  return chunks
 }
 
 async function sendEmail(subject, message) {
@@ -197,6 +243,7 @@ async function sendEmail(subject, message) {
     return { channel: 'email', skipped: true }
   }
 
+  const nodemailer = require('nodemailer')
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT || 465),
@@ -229,21 +276,26 @@ async function sendTelegram(message) {
     return { channel: 'telegram', skipped: true }
   }
 
-  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: message,
-      disable_web_page_preview: true,
-    }),
-  })
+  const parts = splitLongMessage(message)
 
-  if (!response.ok) {
-    throw new Error(`Telegram failed with ${response.status}`)
+  for (const [index, part] of parts.entries()) {
+    const text = parts.length > 1 ? `${part}\n\nЧасть ${index + 1}/${parts.length}` : part
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        disable_web_page_preview: true,
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`Telegram failed with ${response.status}`)
+    }
   }
 
-  return { channel: 'telegram', skipped: false }
+  return { channel: 'telegram', skipped: false, parts: parts.length }
 }
 
 async function sendVk(message) {
@@ -328,8 +380,8 @@ module.exports.handler = async function handler(event) {
   const messages = formatMessages(payload)
   const jobs = [
     runChannel('email', () => sendEmail(messages.subject, messages.full)),
-    runChannel('telegram', () => sendTelegram(messages.messenger)),
-    runChannel('vk', () => sendVk(messages.messenger)),
+    runChannel('telegram', () => sendTelegram(messages.telegram)),
+    runChannel('vk', () => sendVk(messages.vk)),
   ]
 
   const results = await Promise.all(jobs)

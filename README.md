@@ -5,6 +5,7 @@
 - GitHub Pages: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
 - Основная оплата на текущем этапе: QR СБП `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
 - Robokassa пока не используется.
+- Записки отправляются ответственным после отметки пользователем оплаты по СБП.
 
 ## Что уже есть
 
@@ -13,6 +14,7 @@
 - Реальный QR-код СБП в `public/sbp-qr.svg`.
 - Готовность frontend к отправке заявок на backend через `VITE_ORDER_ENDPOINT`.
 - Шаблон backend для почты, Telegram и VK: `server/yandex-notify`.
+- Telegram-бот настраивается через `server/yandex-notify` и закрытую группу ответственных.
 
 ## Запуск разработки
 

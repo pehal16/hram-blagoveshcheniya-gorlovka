@@ -67,9 +67,11 @@ Notification plan:
 - Frontend posts orders to `VITE_ORDER_ENDPOINT`.
 - Backend template lives in `server/yandex-notify`.
 - Full note text goes to email by default.
-- Telegram and VK receive a short notification by default unless `SEND_FULL_TO_MESSENGERS=true`.
+- Telegram can receive full note text in the closed responsible group with `SEND_FULL_TO_TELEGRAM=true`.
+- VK receives a short notification by default unless `SEND_FULL_TO_VK=true`.
 - Public Telegram contact shown on the site: `https://t.me/BlagoVhram`.
 - This public Telegram link is not enough for notification delivery; Telegram notifications still need `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
+- With the current SBP QR link, bank payment confirmation is manual. The frontend sends a note after the visitor marks payment as completed.
 
 If Robokassa is resumed later, review:
 

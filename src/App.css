@@ -838,6 +838,29 @@ textarea:focus {
   color: var(--muted);
 }
 
+.note-payment-step {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 14px;
+  border: 1px solid #d7e3f5;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #f3f8ff, #fffdf8);
+}
+
+.note-payment-step .secondary-button {
+  width: 100%;
+  margin-top: 0;
+}
+
+.note-payment-step p {
+  margin: 0;
+  color: #526375;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+}
+
 .primary-button,
 .secondary-button {
   position: relative;

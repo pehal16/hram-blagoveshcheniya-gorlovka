@@ -1,7 +1,7 @@
 {
   "orderId": "Z-260708-0001",
   "flow": "note",
-  "status": "waiting_payment",
+  "status": "paid_claimed",
   "createdAt": "2026-07-08T12:00:00.000Z",
   "sourceUrl": "https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/",
   "paymentUrl": "https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S",
@@ -14,5 +14,7 @@
   "namesCount": 3,
   "minimumAmount": 350,
   "amount": 500,
+  "paymentClaimed": true,
+  "paymentClaimedAt": "2026-07-08T12:05:00.000Z",
   "website": ""
 }

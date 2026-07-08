@@ -177,6 +177,7 @@ function App() {
   const [donationAmount, setDonationAmount] = useState('500')
   const [donorName, setDonorName] = useState('')
   const [notePrivacyAccepted, setNotePrivacyAccepted] = useState(false)
+  const [notePaymentConfirmed, setNotePaymentConfirmed] = useState(false)
   const [donationPrivacyAccepted, setDonationPrivacyAccepted] = useState(false)
   const [website, setWebsite] = useState('')
   const [submission, setSubmission] = useState<SubmissionState>(initialSubmission)
@@ -197,6 +198,7 @@ function App() {
     namesCount > 0 &&
     giverName.trim().length > 0 &&
     notePrivacyAccepted &&
+    notePaymentConfirmed &&
     !noteAmountTooLow &&
     !isSubmitting
   const canSubmitDonation = donationValue > 0 && donationPrivacyAccepted && !isSubmitting
@@ -214,6 +216,7 @@ function App() {
     setActiveServiceId(service.id)
     setNoteKind(service.kinds[0])
     setNoteAmount(String(calculateMinimum(service, namesCount)))
+    setNotePaymentConfirmed(false)
     setSubmission(initialSubmission)
   }
 
@@ -221,6 +224,7 @@ function App() {
     setNames(value)
     const nextCount = countNames(value)
     setNoteAmount(String(calculateMinimum(activeService, nextCount)))
+    setNotePaymentConfirmed(false)
     setSubmission(initialSubmission)
   }
 
@@ -243,7 +247,7 @@ function App() {
     const payload = {
       orderId,
       flow: 'note',
-      status: 'waiting_payment',
+      status: 'paid_claimed',
       createdAt: new Date().toISOString(),
       sourceUrl: window.location.href,
       paymentUrl: sbpPaymentUrl,
@@ -256,6 +260,8 @@ function App() {
       namesCount,
       minimumAmount,
       amount: finalNoteAmount,
+      paymentClaimed: true,
+      paymentClaimedAt: new Date().toISOString(),
       website,
     }
 
@@ -264,10 +270,10 @@ function App() {
 
       setSubmission({
         status: notificationEndpoint ? 'success' : 'manual',
-        title: notificationEndpoint ? 'Записка отправлена' : 'Заявка сформирована',
+        title: notificationEndpoint ? 'Записка отправлена на проверку' : 'Заявка сформирована',
         text: notificationEndpoint
-          ? 'Теперь оплатите ее через СБП. После ручной сверки поступления записку передадут в храм.'
-          : 'Уведомления еще не подключены на предпросмотре. Перед боевым запуском включим отправку на почту, в Telegram и VK.',
+          ? 'Ответственные получат записку и сверят поступление по СБП вручную.'
+          : 'На предпросмотре уведомления еще не подключены. После подключения бот будет получать записку после отметки оплаты.',
         flow: 'note',
         orderId,
       })
@@ -275,7 +281,7 @@ function App() {
       setSubmission({
         status: 'error',
         title: 'Не удалось отправить записку',
-        text: 'Проверьте соединение и попробуйте еще раз. Оплату лучше делать после успешной отправки заявки.',
+        text: 'Проверьте соединение и попробуйте еще раз. Если оплата уже прошла, свяжитесь с храмом и назовите номер заявки.',
         flow: 'note',
         orderId,
       })
@@ -338,6 +344,9 @@ function App() {
       return null
     }
 
+    const shouldShowPaymentButton =
+      flow === 'donation' && submission.status !== 'submitting' && submission.status !== 'error'
+
     return (
       <div className={`order-message ${submission.status}`} role="status">
         <Check size={22} />
@@ -346,7 +355,7 @@ function App() {
           {submission.orderId ? <span>Номер: {submission.orderId}</span> : null}
           <p>{submission.text}</p>
         </div>
-        {submission.status !== 'submitting' && submission.status !== 'error' ? (
+        {shouldShowPaymentButton ? (
           <a className="secondary-button" href={sbpPaymentUrl} target="_blank" rel="noreferrer">
             Оплатить по СБП
             <ExternalLink size={16} />
@@ -537,7 +546,10 @@ function App() {
               <input
                 inputMode="numeric"
                 value={noteAmount}
-                onChange={(event) => setNoteAmount(event.target.value)}
+                onChange={(event) => {
+                  setNoteAmount(event.target.value)
+                  setNotePaymentConfirmed(false)
+                }}
                 required
               />
             </label>
@@ -550,6 +562,15 @@ function App() {
               <p className="soft-text">Вы можете пожертвовать большую сумму по своему желанию.</p>
             )}
 
+            <div className="note-payment-step">
+              <a className="secondary-button" href={sbpPaymentUrl} target="_blank" rel="noreferrer">
+                <QrCode size={18} />
+                Оплатить по СБП
+                <ExternalLink size={16} />
+              </a>
+              <p>После оплаты вернитесь на сайт и подтвердите отправку записки.</p>
+            </div>
+
             <label className="consent-line">
               <input
                 checked={notePrivacyAccepted}
@@ -559,6 +580,19 @@ function App() {
               />
               <span>
                 Согласен на обработку указанных данных для передачи записки ответственным храма.
+              </span>
+            </label>
+
+            <label className="consent-line">
+              <input
+                checked={notePaymentConfirmed}
+                onChange={(event) => setNotePaymentConfirmed(event.target.checked)}
+                type="checkbox"
+                required
+              />
+              <span>
+                Я оплатил(а) указанную сумму по СБП и понимаю, что поступление будет сверено
+                вручную.
               </span>
             </label>
 
@@ -574,7 +608,7 @@ function App() {
 
             <button className="primary-button" type="submit" disabled={!canSubmitNote}>
               <Send size={20} />
-              {isSubmitting ? 'Отправляем...' : 'Отправить записку'}
+              {isSubmitting ? 'Отправляем...' : 'Я оплатил, отправить записку'}
             </button>
           </form>
         </div>
