@@ -89,6 +89,10 @@ Notification plan:
 - Current deployment candidate: root `Dockerfile` + `server/timeweb-vps/server.mjs`. It builds the frontend with `VITE_ORDER_ENDPOINT=/api/notify`, serves the site, and sends notes to Telegram and email without storing submissions. `docker-compose.timeweb.yml` is retained for local or new dedicated-server fallback.
 - Existing servers, databases, applications, domains, and production services in the Timeweb account are outside this project's scope. Do not inspect their credentials or configuration and never deploy the church site to them.
 - Timeweb App Platform plan selected for preparation: Dockerfile, Moscow, `1 CPU / 1 GB RAM / 15 GB NVMe`, shown as `510 RUB/month` on 2026-07-10. It is a new independent service; creation requires explicit confirmation before the billable `Order` action.
+- Separate Timeweb project created on 2026-07-10: `Храм Благовещения`, project id `2707257`, description `Сайт и уведомления Благовещенского храма`.
+- Only church-owned resources were transferred into that project: domain `благовещение-горловка.рф` and S3 bucket `blago-gorlovka-site`. Other account services were not selected or changed.
+- App Platform order form is prepared but not submitted: project `Храм Благовещения`, Dockerfile, branch `codex/timeweb-vps-launch`, commit `e388689`, Moscow, 510 RUB/month, health path `/health`, Telegram token/chat variables configured as private application variables.
+- Timeweb currently displays an infrastructure incident banner saying new cloud services are temporarily unavailable. The Order button is enabled, but creation may fail until the incident is resolved.
 
 ## Current RF hosting state, 2026-07-09
 
