@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+.git
+.github
+dist
+node_modules
+output
+server/timeweb-vps/.env
+server/timeweb-notify/config.php
+server/timeweb-notify/notify-config.php

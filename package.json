@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:timeweb": "powershell -ExecutionPolicy Bypass -File scripts/prepare-timeweb.ps1",
+    "package:timeweb-hosting": "powershell -ExecutionPolicy Bypass -File scripts/package-timeweb-hosting.ps1",
+    "package:timeweb-notify": "powershell -ExecutionPolicy Bypass -File scripts/package-timeweb-notify.ps1",
     "lint": "oxlint",
     "preview": "vite preview"
   },

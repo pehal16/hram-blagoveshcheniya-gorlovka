@@ -36,6 +36,7 @@ if ($ExpectedEndpoint -and $assetText.Contains($ExpectedEndpoint)) {
   $patterns = @(
     "https://functions\.yandexcloud\.net/[A-Za-z0-9_-]+",
     "https://[^'\""`, ]+\.vercel\.app/api/notify",
+    "https://[^'\""`, ]+/notify\.php",
     "https?://127\.0\.0\.1:8787",
     "https?://localhost:8787"
   )

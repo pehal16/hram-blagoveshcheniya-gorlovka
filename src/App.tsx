@@ -15,6 +15,7 @@ import {
   ScrollText,
   Send,
   SquarePlay,
+  X,
 } from 'lucide-react'
 import './App.css'
 
@@ -99,6 +100,25 @@ const kindLabels: Record<NoteKind, string> = {
 const donationPresets = [100, 300, 500, 1000]
 const sbpPaymentUrl = 'https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S'
 const telegramUrl = 'https://t.me/BlagoVhram'
+const rutubeUrl = 'https://rutube.ru/channel/76042079/'
+const maxUrl = 'https://max.ru/join/yIcHJONjEc1WNkPHuV8VyW0LTcyRKoS82R6BjwyvDD4'
+const phoneNumber = '+7 949 469 5683'
+const phoneHref = 'tel:+79494695683'
+const churchAddress = 'г. Горловка, ж/м «Строитель», ул. Ленина, 190'
+const legalName =
+  'МЕСТНАЯ РЕЛИГИОЗНАЯ ОРГАНИЗАЦИЯ ПРАВОСЛАВНЫЙ ПРИХОД БЛАГОВЕЩЕНСКОГО ХРАМА ГОРОДА ГОРЛОВКИ ГОРЛОВСКОЙ ЕПАРХИИ РУССКОЙ ПРАВОСЛАВНОЙ ЦЕРКВИ (МОСКОВСКИЙ ПАТРИАРХАТ)'
+const requisites = [
+  ['Получатель', legalName],
+  ['ИНН', '9312001415'],
+  ['КПП', '931201001'],
+  ['ОГРНИП', '1229300023127'],
+  ['Счет получателя', '40703 810 6 0930 0008066'],
+  ['Банк', 'ПАО "Банк ПСБ" г. Ярославль'],
+  ['БИК', '044525555'],
+  ['Корреспондентский счет', '30101 810 4 0000 0000555'],
+  ['Юридический адрес', '284637, Россия, ДНР, г. Горловка, пр-кт Ленина, д. 190'],
+  ['Назначение платежа', 'Добровольное пожертвование на уставную деятельность'],
+]
 const notificationEndpoint = String(import.meta.env.VITE_ORDER_ENDPOINT ?? '').trim()
 const annunciationIcon = `${import.meta.env.BASE_URL}annunciation.png`
 const sbpQrImage = `${import.meta.env.BASE_URL}sbp-qr.svg`
@@ -181,6 +201,7 @@ function App() {
   const [donationPrivacyAccepted, setDonationPrivacyAccepted] = useState(false)
   const [website, setWebsite] = useState('')
   const [submission, setSubmission] = useState<SubmissionState>(initialSubmission)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const namesCount = useMemo(() => countNames(names), [names])
   const namesList = useMemo(() => normalizeNames(names), [names])
@@ -218,6 +239,10 @@ function App() {
     setNoteAmount(String(calculateMinimum(service, namesCount)))
     setNotePaymentConfirmed(false)
     setSubmission(initialSubmission)
+  }
+
+  function closeMobileMenu() {
+    setMobileMenuOpen(false)
   }
 
   function handleNamesChange(value: string) {
@@ -376,12 +401,39 @@ function App() {
           <div className="desktop-nav">
             <a href="#notes">Подать записку</a>
             <a href="#donate">Пожертвовать</a>
+            <a href="#requisites">Реквизиты</a>
             <a href="#contacts">Контакты</a>
           </div>
-          <button className="icon-button" type="button" aria-label="Открыть меню">
-            <Menu size={22} />
+          <button
+            className="icon-button"
+            type="button"
+            aria-label={mobileMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
+            aria-controls="mobile-nav"
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </nav>
+
+        <div
+          id="mobile-nav"
+          className={`mobile-nav ${mobileMenuOpen ? 'is-open' : ''}`}
+          aria-hidden={!mobileMenuOpen}
+        >
+          <a href="#notes" onClick={closeMobileMenu}>
+            Подать записку
+          </a>
+          <a href="#donate" onClick={closeMobileMenu}>
+            Пожертвовать
+          </a>
+          <a href="#requisites" onClick={closeMobileMenu}>
+            Реквизиты
+          </a>
+          <a href="#contacts" onClick={closeMobileMenu}>
+            Контакты
+          </a>
+        </div>
 
         <section id="top" className="hero-grid">
           <div className="icon-frame">
@@ -579,7 +631,8 @@ function App() {
                 required
               />
               <span>
-                Согласен на обработку указанных данных для передачи записки ответственным храма.
+                Согласен на обработку указанных данных для передачи записки ответственным храма
+                согласно <a href="#privacy">политике обработки данных</a>.
               </span>
             </label>
 
@@ -665,7 +718,10 @@ function App() {
                 type="checkbox"
                 required
               />
-              <span>Согласен на обработку данных для оформления пожертвования.</span>
+              <span>
+                Согласен на обработку данных для оформления пожертвования согласно{' '}
+                <a href="#privacy">политике обработки данных</a>.
+              </span>
             </label>
             <button className="primary-button" type="submit" disabled={!canSubmitDonation}>
               <HeartHandshake size={20} />
@@ -690,6 +746,24 @@ function App() {
               </a>
             </div>
           </div>
+
+          <aside id="requisites" className="requisites-panel" aria-labelledby="requisites-title">
+            <div className="requisites-copy">
+              <h3 id="requisites-title">Реквизиты для пожертвования</h3>
+              <p>
+                СБП остается основным быстрым способом оплаты. Эти реквизиты можно использовать
+                для банковского перевода и ручной сверки поступления.
+              </p>
+            </div>
+            <dl>
+              {requisites.map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
         </div>
 
         {renderSubmissionMessage('donation')}
@@ -719,8 +793,44 @@ function App() {
             <h3>3. Передача</h3>
             <p>
               {notificationEndpoint
-                ? 'Заявка уходит ответственным на почту, в Telegram и VK.'
-                : 'Перед запуском подключим уведомления для почты, Telegram и VK.'}
+                ? 'Заявка уходит ответственным на почту и в Telegram.'
+                : 'Перед запуском подключим уведомления для почты и Telegram.'}
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="privacy" className="section privacy-section" aria-labelledby="privacy-title" data-reveal>
+        <div className="section-heading">
+          <h2 id="privacy-title">Обработка данных</h2>
+          <p>
+            Данные из форм используются только для передачи записок, оформления пожертвований
+            и связи с подающим при необходимости.
+          </p>
+        </div>
+        <div className="privacy-grid">
+          <article>
+            <ScrollText size={24} />
+            <h3>Что передается</h3>
+            <p>
+              Имя подающего, контакт, выбранный вид записки, список имен, сумма пожертвования
+              и номер заявки.
+            </p>
+          </article>
+          <article>
+            <Church size={24} />
+            <h3>Кто обрабатывает</h3>
+            <p>
+              {legalName}. ИНН 9312001415, адрес: 284637, Россия, ДНР, г. Горловка,
+              пр-кт Ленина, д. 190.
+            </p>
+          </article>
+          <article>
+            <MessageCircle size={24} />
+            <h3>Куда уходят заявки</h3>
+            <p>
+              Заявки передаются ответственным храма через подключенные служебные каналы и не
+              публикуются на сайте.
             </p>
           </article>
         </div>
@@ -734,11 +844,11 @@ function App() {
         <ul>
           <li>
             <MapPin size={20} />
-            г. Горловка
+            <span>{churchAddress}</span>
           </li>
           <li>
             <Phone size={20} />
-            Телефон будет добавлен после согласования
+            <a href={phoneHref}>{phoneNumber}</a>
           </li>
           <li>
             <Mail size={20} />
@@ -752,7 +862,15 @@ function App() {
           </li>
           <li>
             <SquarePlay size={20} />
-            Rutube после согласования
+            <a href={rutubeUrl} target="_blank" rel="noreferrer">
+              Rutube: канал храма
+            </a>
+          </li>
+          <li>
+            <MessageCircle size={20} />
+            <a href={maxUrl} target="_blank" rel="noreferrer">
+              MAX: чат храма
+            </a>
           </li>
         </ul>
       </footer>

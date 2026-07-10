@@ -97,7 +97,7 @@ function formatPaymentStatus(payload) {
   const status = cleanText(payload.status, 40)
 
   if (status === 'paid_claimed' || payload.paymentClaimed === true) {
-    return 'Пользователь указал, что оплатил по СБП. Нужна ручная сверка поступления.'
+    return 'Посетитель отметил оплату по СБП. Проверьте поступление на счете вручную.'
   }
 
   return 'Ожидает оплаты по СБП'

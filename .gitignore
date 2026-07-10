@@ -13,6 +13,9 @@ dist-ssr
 output
 *.local
 server/yandex-notify/yandex-cloud.env
+server/timeweb-notify/config.php
+server/timeweb-notify/notify-config.php
+server/timeweb-vps/.env
 
 # Editor directories and files
 .vscode/*
