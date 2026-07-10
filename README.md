@@ -5,7 +5,7 @@
 - GitHub Pages: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
 - Timeweb S3 technical preview: `https://blago-gorlovka-site.website.twcstorage.ru/`
 - Planned production domain: `https://www.благовещение-горловка.рф/`
-- Целевая схема запуска: новый отдельный Timeweb App Platform Docker-сервис только для храма, с изолированным контейнером сайта и уведомлений. Существующие серверы аккаунта не используются. Обычный Timeweb PHP-хостинг остается запасным вариантом, S3 - техническим предпросмотром.
+- Целевая схема запуска: недорогой отдельный российский PHP-хостинг для статического сайта и одного обработчика Telegram. Timeweb App Platform за 510 ₽/мес не заказываем. Существующие серверы аккаунта не используются, S3 остается техническим предпросмотром.
 - Основная оплата на текущем этапе: QR СБП `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
 - Robokassa пока не используется.
 - Записки отправляются ответственным после отметки пользователем оплаты по СБП.
@@ -19,8 +19,8 @@
 - Реквизиты организации из PDF заказчика.
 - Раздел обработки данных и ссылки на него из согласий в формах.
 - Готовность frontend к отправке заявок на backend через `VITE_ORDER_ENDPOINT`.
-- Основной RF-backend для почты и Telegram: `server/timeweb-vps`.
-- Запасной PHP-backend для обычного хостинга: `server/timeweb-notify`.
+- Основной RF-backend для Telegram: `server/timeweb-notify`.
+- Docker-backend `server/timeweb-vps` сохранен как запасной вариант на будущее.
 - Старый Node-backend для Vercel/Yandex сохранен в `server/yandex-notify` как запасной вариант.
 - Telegram-бот настраивается через закрытую группу ответственных.
 
@@ -38,11 +38,11 @@ npm run lint
 npm run build
 ```
 
-## Запуск в Timeweb App Platform
+## Дорогой Docker-вариант отложен
 
-Основной production-вариант собирает frontend и backend в один контейнер из корневого `Dockerfile`. Токен Telegram и пароль почты задаются как закрытые переменные App Platform.
+Контейнер из корневого `Dockerfile` рабочий, но Timeweb App Platform для текущей нагрузки избыточен.
 
-Минимальная отдельная конфигурация App Platform: `1 CPU / 1 ГБ RAM / 15 ГБ NVMe`, Москва. На 10.07.2026 панель показывает стоимость `510 ₽/мес`.
+Минимальная конфигурация App Platform на 10.07.2026 стоит `510 ₽/мес`. Заказ не оформлен.
 
 Для локальной проверки или отдельного нового VPS остается Compose-конфигурация:
 
@@ -52,9 +52,9 @@ docker compose -f docker-compose.timeweb.yml up -d --build
 
 В Compose-контейнер слушает только `127.0.0.1:8088`; в App Platform внешний домен и SSL настраивает платформа. Подробная инструкция находится в `server/timeweb-vps/README.md`.
 
-## Запасной PHP-вариант
+## Основной дешевый PHP-вариант
 
-Сайт не хранит токены Telegram и пароль почты. Для боевого запуска на Timeweb нужно собрать единый архив:
+Сайт не хранит токен Telegram. Для боевого запуска на обычном российском PHP-хостинге нужно собрать единый архив:
 
 ```powershell
 npm run package:timeweb-hosting
@@ -66,13 +66,13 @@ npm run package:timeweb-hosting
 output/timeweb-hosting-site.zip
 ```
 
-Его содержимое нужно загрузить в корень сайта на Timeweb-хостинге. Endpoint для заявок будет:
+Его содержимое нужно загрузить в корень сайта на PHP-хостинге. Endpoint для заявок будет:
 
 ```text
 VITE_ORDER_ENDPOINT=https://www.благовещение-горловка.рф/api/notify.php
 ```
 
-После загрузки нужно создать на хостинге `api/config.php` из `api/config.example.php` и заполнить секреты Telegram/почты. После этого заявки будут уходить в PHP-скрипт, а он разошлет их на почту и в Telegram.
+После загрузки нужно создать на хостинге `api/config.php` из `api/config.example.php` и заполнить только токен Telegram. Заявки будут уходить в закрытую группу Telegram; почта, VK и база данных для первого запуска отключены.
 
 Для временного полного маршрута на Vercel endpoint будет:
 
@@ -80,4 +80,4 @@ VITE_ORDER_ENDPOINT=https://www.благовещение-горловка.рф/a
 https://<vercel-domain>/api/notify
 ```
 
-Для боевого переезда на РФ-инфраструктуру см. `server/timeweb-vps/README.md`. Для обычного PHP-хостинга см. `server/timeweb-notify/README.md`.
+Для дешевого боевого запуска см. `server/timeweb-notify/README.md`. Docker-инструкция в `server/timeweb-vps/README.md` сохранена только как запасной вариант.

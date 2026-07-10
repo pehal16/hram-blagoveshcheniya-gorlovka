@@ -17,13 +17,13 @@ return [
     'telegram_chat_id' => '-5589930019',
     'send_full_to_telegram' => true,
 
-    // Use "smtp" for a Timeweb mailbox, "mail" for PHP mail(), or "auto".
-    'mail_transport' => 'smtp',
-    'smtp_host' => 'smtp.timeweb.ru',
+    // Email is intentionally disabled for the first launch.
+    'mail_transport' => 'disabled',
+    'smtp_host' => '',
     'smtp_port' => 465,
     'smtp_secure' => 'ssl',
-    'smtp_user' => 'zapiski@xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai',
+    'smtp_user' => '',
     'smtp_pass' => '',
-    'mail_from' => 'zapiski@xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai',
+    'mail_from' => '',
     'mail_to' => '',
 ];

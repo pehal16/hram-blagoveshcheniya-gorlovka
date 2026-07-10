@@ -62,10 +62,10 @@ if (!$assetText.Contains($Endpoint)) {
 }
 
 Write-Host ""
-Write-Host "Timeweb hosting archive ready:"
+Write-Host "PHP hosting archive ready:"
 Write-Host $archive
 Write-Host ""
-Write-Host "Upload archive contents to the Timeweb site root."
+Write-Host "Upload archive contents to the PHP hosting site root."
 Write-Host "Notification endpoint embedded in frontend:"
 Write-Host $Endpoint
 Write-Host ""

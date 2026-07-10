@@ -7,7 +7,7 @@ This file is the durable context for future Codex sessions. Read it before chang
 - Site folder: `C:\Users\АМ\Documents\Сайт Церкви\site`
 - Stack: React + Vite + TypeScript + lucide-react.
 - Hosting preview: GitHub Pages.
-- Target launch hosting: a new, separate Timeweb App Platform Docker service dedicated only to the church site, serving the frontend and `/api/notify` from one origin. Never use any pre-existing server or application in the account.
+- Target launch hosting: a separate low-cost Russian shared PHP hosting account serving the static frontend and `api/notify.php`. Never use any pre-existing server or application in the Timeweb account.
 - Repository: `https://github.com/pehal16/hram-blagoveshcheniya-gorlovka`
 - Live preview: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
 - Vite uses `base: './'` so assets work on GitHub Pages subpaths.
@@ -70,9 +70,8 @@ Notification plan:
 - GitHub Pages uses the repository variable `VITE_ORDER_ENDPOINT=https://site-livid-mu-36.vercel.app/api/notify`.
 - Local Vite testing uses ignored `.env.local` with the same `VITE_ORDER_ENDPOINT`; restart `npm run dev` after changing it.
 - Backend templates live in `server/timeweb-notify` for the RF PHP route and `server/yandex-notify` for the older Yandex/Vercel-compatible route.
-- Full note text goes to email by default.
-- Telegram can receive full note text in the closed responsible group with `SEND_FULL_TO_TELEGRAM=true`.
-- VK is not required for the current launch. Telegram + email are enough.
+- Full note text goes only to the closed Telegram group for the first launch.
+- Email, VK, and database storage are disabled for the first launch.
 - Public Telegram contact shown on the site: `https://t.me/BlagoVhram`.
 - Public Rutube contact shown on the site: `https://rutube.ru/channel/76042079/`.
 - Public MAX chat shown on the site: `https://max.ru/join/yIcHJONjEc1WNkPHuV8VyW0LTcyRKoS82R6BjwyvDD4`.
@@ -86,13 +85,21 @@ Notification plan:
 - Vercel `ALLOWED_ORIGIN` must include the public GitHub Pages origin plus local testing origins `http://127.0.0.1:5173` and `http://localhost:5173`.
 - Verified on 2026-07-08: the live GitHub Pages form and the local Vite form send notes to Vercel, Vercel returns `200`, and Telegram receives the test notes.
 - Requisites added on 2026-07-09 from `Карточка организации.pdf` and `Выписка по счёту.pdf`: INN `9312001415`, KPP `931201001`, OGRNIP `1229300023127`, account `40703 810 6 0930 0008066`, bank `ПАО "Банк ПСБ" г. Ярославль`, BIK `044525555`, correspondent account `30101 810 4 0000 0000555`, legal address `284637, Россия, ДНР, г. Горловка, пр-кт Ленина, д. 190`.
-- Current deployment candidate: root `Dockerfile` + `server/timeweb-vps/server.mjs`. It builds the frontend with `VITE_ORDER_ENDPOINT=/api/notify`, serves the site, and sends notes to Telegram and email without storing submissions. `docker-compose.timeweb.yml` is retained for local or new dedicated-server fallback.
+- Current deployment candidate: `server/timeweb-notify/notify.php` packaged with the Vite build by `npm run package:timeweb-hosting`. It sends notes to Telegram without storing submissions. The root Dockerfile and `server/timeweb-vps` are retained only as a future fallback.
 - Existing servers, databases, applications, domains, and production services in the Timeweb account are outside this project's scope. Do not inspect their credentials or configuration and never deploy the church site to them.
-- Timeweb App Platform plan selected for preparation: Dockerfile, Moscow, `1 CPU / 1 GB RAM / 15 GB NVMe`, shown as `510 RUB/month` on 2026-07-10. It is a new independent service; creation requires explicit confirmation before the billable `Order` action.
+- Timeweb App Platform at `510 RUB/month` was rejected on 2026-07-10 as unnecessarily expensive. Its order was never submitted.
 - Separate Timeweb project created on 2026-07-10: `Храм Благовещения`, project id `2707257`, description `Сайт и уведомления Благовещенского храма`.
 - Only church-owned resources were transferred into that project: domain `благовещение-горловка.рф` and S3 bucket `blago-gorlovka-site`. Other account services were not selected or changed.
-- App Platform order form is prepared but not submitted: project `Храм Благовещения`, Dockerfile, branch `codex/timeweb-vps-launch`, commit `e388689`, Moscow, 510 RUB/month, health path `/health`, Telegram token/chat variables configured as private application variables.
+- Do not submit the previously prepared App Platform order. The launch target is shared PHP hosting with Telegram only.
 - Timeweb currently displays an infrastructure incident banner saying new cloud services are temporarily unavailable. The Order button is enabled, but creation may fail until the incident is resolved.
+
+## Cheapest launch decision, 2026-07-10
+
+- Email is postponed. Notes must be delivered only to the closed Telegram group.
+- The recommended stable budget option is SprintHost `База`: first month is a free trial, then 150 RUB/month or 120 RUB/month with annual payment, with PHP, SSL, backups, and a technical domain included.
+- HostiMan Free is a zero-cost alternative, but activation requires a photo of an identity document, registration of another RU/RF domain with that provider, or an 80 RUB/month payment. Treat it as a temporary/testing option, not the preferred production launch.
+- The domain remains registered at Timeweb. Test on the hosting technical domain before changing DNS.
+- Production package: `output/timeweb-hosting-site.zip`; despite the historical filename, it works on a normal PHP hosting account.
 
 ## Current RF hosting state, 2026-07-09
 

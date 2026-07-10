@@ -574,11 +574,16 @@ function send_mail_email(array $config, string $subject, string $message): array
 
 function send_email(array $config, string $subject, string $message): array
 {
+    $transport = strtolower((string) ($config['mail_transport'] ?? 'disabled'));
+
+    if ($transport === 'disabled' || $transport === 'off' || $transport === 'none') {
+        return ['channel' => 'email', 'skipped' => true];
+    }
+
     if (config_bool($config, 'dry_run')) {
         return ['channel' => 'email', 'skipped' => false, 'dryRun' => true];
     }
 
-    $transport = strtolower((string) ($config['mail_transport'] ?? 'auto'));
     $hasSmtp = trim((string) ($config['smtp_host'] ?? '')) !== ''
         && trim((string) ($config['smtp_user'] ?? '')) !== ''
         && (string) ($config['smtp_pass'] ?? '') !== '';
