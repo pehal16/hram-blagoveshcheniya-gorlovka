@@ -1,5 +1,5 @@
 param(
-  [string]$Endpoint = "https://www.xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/api/notify.php",
+  [string]$Endpoint = "/api/notify.php",
   [string]$ArchiveName = "timeweb-hosting-site.zip"
 )
 

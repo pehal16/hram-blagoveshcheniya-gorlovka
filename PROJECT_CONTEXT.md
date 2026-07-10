@@ -96,15 +96,29 @@ Notification plan:
 ## Cheapest launch decision, 2026-07-10
 
 - Email is postponed. Notes must be delivered only to the closed Telegram group.
-- The recommended stable budget option is SprintHost `База`: first month is a free trial, then 150 RUB/month or 120 RUB/month with annual payment, with PHP, SSL, backups, and a technical domain included.
+- The current zero-cost launch attempt uses SprintHost Free. If it becomes too limiting, the recommended stable budget option is SprintHost `База`: first month is a free trial, then 150 RUB/month or 120 RUB/month with annual payment, with PHP, SSL, backups, and a technical domain included.
 - HostiMan Free is a zero-cost alternative, but activation requires a photo of an identity document, registration of another RU/RF domain with that provider, or an 80 RUB/month payment. Treat it as a temporary/testing option, not the preferred production launch.
 - The domain remains registered at Timeweb. Test on the hosting technical domain before changing DNS.
 - Production package: `output/timeweb-hosting-site.zip`; despite the historical filename, it works on a normal PHP hosting account.
+- `scripts/package-timeweb-hosting.ps1` defaults to the relative endpoint `/api/notify.php` so the same build works on a technical domain and on `благовещение-горловка.рф`.
+
+## SprintHost Free launch attempt, 2026-07-10
+
+- SprintHost account login: `pehal`.
+- FTP server: `141.8.192.182`.
+- FTP user: `pehal`.
+- Do not store the FTP password or Telegram bot token in the repo.
+- Technical domain/folder: `pehal.xsph.ru`, `/domains/pehal.xsph.ru/public_html`.
+- Uploaded the current PHP-hosting package to the technical folder with `api/notify.php` and a production-only `api/config.php` containing Telegram settings. The local temp copy was deleted after upload.
+- The technical domain `http://pehal.xsph.ru/` currently returns `403 Forbidden` even though files and permissions are correct. SprintHost shows owner data as unfilled and the free-zone technical domain may require real passport/profile data before web access; do not fill personal data automatically.
+- Timeweb domain NS was changed via API to `ns1.sprinthost.ru`, `ns2.sprinthost.ru`, `ns3.sprinthost.net`, `ns4.sprinthost.net`; Timeweb API reported `task_status=done`.
+- As of 2026-07-10 22:20 MSK, public DNS still returns old Timeweb NS for `xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai`, so SprintHost still refuses to add `благовещение-горловка.рф` and asks to set SprintHost NS. Wait for DNS/registry propagation, then retry `Сайты -> Добавить сайт -> благовещение-горловка.рф -> Это мой домен -> Создать сайт`.
+- After the main domain is accepted by SprintHost, upload the same package contents to `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html` or the actual folder SprintHost creates, then test `/api/notify.php` and a real form submission to Telegram.
 
 ## Current RF hosting state, 2026-07-09
 
 - Domain purchased in Timeweb for 1 year: `благовещение-горловка.рф` (`xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai`), request id `6685859`, domain id `23448381`, expiration `2027-07-09`.
-- Domain DNS is now delegated to Timeweb NS.
+- Domain DNS was originally delegated to Timeweb NS; on 2026-07-10 it was switched in Timeweb API to SprintHost NS for the shared-hosting launch attempt, but public DNS had not propagated yet at the time of the last check.
 - Timeweb S3 bucket created for the static site: `blago-gorlovka-site`, bucket id `528553`, project id `2547234`, location `ru-1`, static website enabled with `index.html`.
 - Current Timeweb technical URL is live: `https://blago-gorlovka-site.website.twcstorage.ru/`.
 - `www.благовещение-горловка.рф` was successfully bound to Timeweb S3 and SSL was issued, but Timeweb S3 custom domains serve direct object paths only; the root `/` returns 403 instead of the static website `index.html`.
