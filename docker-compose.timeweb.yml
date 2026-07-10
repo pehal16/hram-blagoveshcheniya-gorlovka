@@ -2,7 +2,7 @@ services:
   church-site:
     build:
       context: .
-      dockerfile: Dockerfile.timeweb
+      dockerfile: Dockerfile
     container_name: church-site
     restart: unless-stopped
     env_file:

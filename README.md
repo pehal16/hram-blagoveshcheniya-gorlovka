@@ -5,7 +5,7 @@
 - GitHub Pages: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
 - Timeweb S3 technical preview: `https://blago-gorlovka-site.website.twcstorage.ru/`
 - Planned production domain: `https://www.благовещение-горловка.рф/`
-- Целевая схема запуска: новый отдельный сервис Timeweb только для храма, с изолированным контейнером сайта и уведомлений. Существующие серверы аккаунта не используются. Обычный Timeweb PHP-хостинг остается запасным вариантом, S3 - техническим предпросмотром.
+- Целевая схема запуска: новый отдельный Timeweb App Platform Docker-сервис только для храма, с изолированным контейнером сайта и уведомлений. Существующие серверы аккаунта не используются. Обычный Timeweb PHP-хостинг остается запасным вариантом, S3 - техническим предпросмотром.
 - Основная оплата на текущем этапе: QR СБП `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
 - Robokassa пока не используется.
 - Записки отправляются ответственным после отметки пользователем оплаты по СБП.
@@ -38,15 +38,19 @@ npm run lint
 npm run build
 ```
 
-## Запуск на Timeweb VPS
+## Запуск в Timeweb App Platform
 
-Основной production-вариант собирает frontend и backend в один контейнер. Токен Telegram и пароль почты хранятся только в серверном `.env`.
+Основной production-вариант собирает frontend и backend в один контейнер из корневого `Dockerfile`. Токен Telegram и пароль почты задаются как закрытые переменные App Platform.
+
+Минимальная отдельная конфигурация App Platform: `1 CPU / 1 ГБ RAM / 15 ГБ NVMe`, Москва. На 10.07.2026 панель показывает стоимость `510 ₽/мес`.
+
+Для локальной проверки или отдельного нового VPS остается Compose-конфигурация:
 
 ```powershell
 docker compose -f docker-compose.timeweb.yml up -d --build
 ```
 
-Контейнер слушает только `127.0.0.1:8088`; публичный HTTPS-доступ должен идти через Nginx или Caddy. Подробная инструкция находится в `server/timeweb-vps/README.md`.
+В Compose-контейнер слушает только `127.0.0.1:8088`; в App Platform внешний домен и SSL настраивает платформа. Подробная инструкция находится в `server/timeweb-vps/README.md`.
 
 ## Запасной PHP-вариант
 
