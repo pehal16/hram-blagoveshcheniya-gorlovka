@@ -11,8 +11,8 @@
 - Для уведомлений в Telegram получить не ссылку канала, а `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`.
 - Проверить Telegram командой `npm run telegram:test` из `server/yandex-notify`.
 - Для закрытой группы ответственных включить `SEND_FULL_TO_TELEGRAM=true`.
-- Получить отдельное подтверждение владельца на размещение контейнера на существующем VPS `gastronom-db-vps`.
-- До изменений сделать бэкап и проверить текущие контейнеры, Nginx/Caddy, занятые порты, память и правила firewall.
+- Создать новый отдельный сервис Timeweb только для сайта храма. Существующие серверы и приложения аккаунта не использовать и не изменять.
+- Для отдельного сервиса выбрать минимальную конфигурацию, проверить итоговую месячную стоимость и получить подтверждение перед заказом.
 - Создать `server/timeweb-vps/.env` из `.env.example` и заполнить Telegram bot token, Telegram chat id и SMTP/mail settings.
 - Запустить `docker compose -f docker-compose.timeweb.yml up -d --build` и проверить `http://127.0.0.1:8088/health`.
 - Добавить отдельный virtual host Nginx/Caddy для домена без изменения конфигурации PostgreSQL и других приложений.

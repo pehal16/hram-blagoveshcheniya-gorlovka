@@ -7,7 +7,7 @@ This file is the durable context for future Codex sessions. Read it before chang
 - Site folder: `C:\Users\АМ\Documents\Сайт Церкви\site`
 - Stack: React + Vite + TypeScript + lucide-react.
 - Hosting preview: GitHub Pages.
-- Target launch hosting: an isolated Docker container on a Timeweb VPS, serving the frontend and `/api/notify` from one origin. Classic Timeweb PHP hosting remains the fallback.
+- Target launch hosting: a new, separate Timeweb service dedicated only to the church site, serving the frontend and `/api/notify` from one origin. Never use any pre-existing server or application in the account.
 - Repository: `https://github.com/pehal16/hram-blagoveshcheniya-gorlovka`
 - Live preview: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
 - Vite uses `base: './'` so assets work on GitHub Pages subpaths.
@@ -87,8 +87,8 @@ Notification plan:
 - Verified on 2026-07-08: the live GitHub Pages form and the local Vite form send notes to Vercel, Vercel returns `200`, and Telegram receives the test notes.
 - Requisites added on 2026-07-09 from `Карточка организации.pdf` and `Выписка по счёту.pdf`: INN `9312001415`, KPP `931201001`, OGRNIP `1229300023127`, account `40703 810 6 0930 0008066`, bank `ПАО "Банк ПСБ" г. Ярославль`, BIK `044525555`, correspondent account `30101 810 4 0000 0000555`, legal address `284637, Россия, ДНР, г. Горловка, пр-кт Ленина, д. 190`.
 - Current deployment candidate: `Dockerfile.timeweb` + `docker-compose.timeweb.yml` + `server/timeweb-vps/server.mjs`. It builds the frontend with `VITE_ORDER_ENDPOINT=/api/notify`, serves the site, and sends notes to Telegram and email without storing submissions.
-- There is an existing Timeweb production VPS named `gastronom-db-vps`, used for a PostgreSQL production migration. Its disk has sufficient free space, but do not deploy, inspect credentials, reset access, or change services on it without explicit user approval because it belongs to another production project.
-- The container is bound to `127.0.0.1:8088` and must be exposed through a separate Nginx/Caddy virtual host after checking existing ports and services.
+- Existing servers, databases, applications, domains, and production services in the Timeweb account are outside this project's scope. Do not inspect their credentials or configuration and never deploy the church site to them.
+- For a dedicated VPS route, the container is bound to `127.0.0.1:8088` and must be exposed through its own Nginx/Caddy virtual host. For App Platform, use the same container through the Docker deployment type.
 
 ## Current RF hosting state, 2026-07-09
 
