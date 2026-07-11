@@ -309,7 +309,7 @@ function format_messages(array $payload, array $config): array
         'Имен: ' . count($names),
         "Сумма: {$amount} руб.",
         "Статус: {$paymentStatus}",
-        'Полный текст записки отправлен на почту.',
+        'Полный текст записки отправлен в Telegram ответственным.',
     ]);
 
     return [

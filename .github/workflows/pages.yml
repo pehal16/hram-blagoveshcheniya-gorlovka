@@ -34,7 +34,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_ORDER_ENDPOINT: ${{ vars.VITE_ORDER_ENDPOINT }}
+          VITE_ORDER_ENDPOINT: ${{ vars.VITE_ORDER_ENDPOINT || 'https://api.xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/api/notify.php' }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

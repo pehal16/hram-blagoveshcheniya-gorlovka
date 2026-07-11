@@ -5,8 +5,8 @@
 - GitHub Pages: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
 - Custom domain target: `https://благовещение-горловка.рф/`
 - Timeweb S3 technical preview: `https://blago-gorlovka-site.website.twcstorage.ru/`
-- Planned production domain: `https://www.благовещение-горловка.рф/`
-- Целевая схема запуска: домен и DNS остаются в Timeweb, статическая часть публикуется через GitHub Pages. GitHub Pages не выполняет PHP, поэтому Telegram-обработчик должен работать на отдельном endpoint.
+- Planned production domain: `https://благовещение-горловка.рф/`
+- Целевая схема запуска: домен и DNS остаются в Timeweb, статическая часть публикуется через GitHub Pages, а Telegram-обработчик работает на отдельном API-поддомене `api.благовещение-горловка.рф` на российском PHP-хостинге.
 - Основная оплата на текущем этапе: QR СБП `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
 - Robokassa пока не используется.
 - Записки отправляются ответственным после отметки пользователем оплаты по СБП.
@@ -70,7 +70,7 @@ output/timeweb-hosting-site.zip
 Его содержимое нужно загрузить в корень сайта на PHP-хостинге. Endpoint для заявок будет:
 
 ```text
-VITE_ORDER_ENDPOINT=https://www.благовещение-горловка.рф/api/notify.php
+VITE_ORDER_ENDPOINT=https://api.благовещение-горловка.рф/api/notify.php
 ```
 
 После загрузки нужно создать на хостинге `api/config.php` из `api/config.example.php` и заполнить только токен Telegram. Заявки будут уходить в закрытую группу Telegram; почта, VK и база данных для первого запуска отключены.
