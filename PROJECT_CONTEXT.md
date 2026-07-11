@@ -21,19 +21,18 @@ This file is the durable context for future Codex sessions. Read it before chang
 - The frontend and `api/notify.php` are deployed together on the same SprintHost site. The frontend endpoint is the same-origin path `/api/notify.php`.
 - GitHub remains the source-code repository and backup history. GitHub Pages is a preview only and is not the production host.
 - Vercel, Cloudflare, Yandex Cloud, Timeweb S3, and Timeweb App Platform are not part of the production request route.
-- Timeweb NS was changed on 2026-07-11 to `ns1.sprinthost.ru` and `ns2.sprinthost.ru`. Timeweb confirms these values; public DNS propagation is still pending.
+- Timeweb NS was changed on 2026-07-11 to SprintHost NS; public DNS now resolves to SprintHost.
 - SprintHost Free is suitable only for staging. The verified minimum production tariff is `X-1`: 190 RUB/month or 149 RUB/month when paid annually (1,788 RUB/year), with PHP, SSL, and 30-day backups.
 - Telegram is the only notification channel for the first launch. The site does not store note submissions in a database.
 - The current SBP link does not provide automatic payment confirmation. A visitor marks payment as completed, the note is delivered to Telegram, and the responsible person verifies the bank receipt manually.
 - Before production, rotate the Telegram bot token in BotFather because the old token was exposed in chat. Enter the new token only in SprintHost `api/config.php`; never send it in chat or commit it.
 - SprintHost accepted and created the main site `благовещение-горловка.рф`; its document root is `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html`.
 - The current frontend build, `api/notify.php`, a token-free `api/config.php`, and Apache access guards were uploaded to that document root on 2026-07-11. Remote FTP listings confirmed all expected files.
-- As of 2026-07-11 17:33 MSK, public DNS still returns the old Timeweb NS and the old GitHub Pages target. Do not change the hosting layout while registry propagation is pending.
-- After owner verification, DNS now resolves to SprintHost (`ns1.sprinthost.ru`, `ns2.sprinthost.ru`, `ns3.sprinthost.net`, `ns4.sprinthost.net`) and HTTP serves the deployed frontend with `200 OK`.
+- After owner verification, DNS resolves to SprintHost (`ns1.sprinthost.ru`, `ns2.sprinthost.ru`, `ns3.sprinthost.net`, `ns4.sprinthost.net`) and the deployed frontend serves successfully.
 - HTTP `/api/notify.php` is executing PHP correctly: GET returns `405 Method Not Allowed`, and an invalid JSON POST returns `400 Invalid order payload`.
-- SprintHost Free explicitly keeps SSL unavailable. Production HTTPS requires the paid `X-1` tariff; do not activate it without explicit user confirmation.
+- The user paid for and activated SprintHost `X-1` on 2026-07-11. The free Let's Encrypt Wildcard switch is enabled for the main domain.
 - The SprintHost technical domain returns `403` while account owner data is unfilled. SprintHost's official setup guide requires real owner details; the user must enter those details personally in the hosting profile.
-- PHP and end-to-end Telegram delivery cannot be declared verified until the owner profile is completed, DNS reaches SprintHost, and a newly rotated bot token is entered directly into the server-side config.
+- HTTPS is verified externally: the site returns `200 OK` and `https://.../api/notify.php` returns the expected JSON `405`. Telegram delivery still requires a newly rotated bot token entered directly into the server-side config.
 
 ## Product brief
 
@@ -118,7 +117,7 @@ Notification plan:
 ## Cheapest launch decision, 2026-07-10
 
 - Email is postponed. Notes must be delivered only to the closed Telegram group.
-- The current zero-cost launch attempt uses SprintHost Free. As verified in the live panel on 2026-07-11, the recommended stable budget option is SprintHost `X-1`: 190 RUB/month or 149 RUB/month with annual payment, with PHP, SSL, and 30-day backups.
+- The production launch uses SprintHost `X-1`: 190 RUB/month, paid and active on 2026-07-11, with PHP, SSL, and 30-day backups.
 - HostiMan Free is a zero-cost alternative, but activation requires a photo of an identity document, registration of another RU/RF domain with that provider, or an 80 RUB/month payment. Treat it as a temporary/testing option, not the preferred production launch.
 - The domain remains registered at Timeweb. Test on the hosting technical domain before changing DNS.
 - Production package: `output/timeweb-hosting-site.zip`; despite the historical filename, it works on a normal PHP hosting account.
@@ -132,10 +131,10 @@ Notification plan:
 - Do not store the FTP password or Telegram bot token in the repo.
 - Main domain/folder: `благовещение-горловка.рф`, `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html`.
 - Uploaded the current PHP-hosting package to the main domain folder with `api/notify.php`, a token-free `api/config.php`, and `api/.htaccess`. No Telegram secret is stored in the repository or deployment archive.
-- Technical-domain access still returns `403 Forbidden`. SprintHost shows owner data as unfilled; do not fill personal or passport data automatically.
-- Timeweb domain NS was changed via API to `ns1.sprinthost.ru`, `ns2.sprinthost.ru`, `ns3.sprinthost.net`, `ns4.sprinthost.net`; Timeweb API reported `task_status=done`.
-- SprintHost has accepted and created the main domain site. The remaining infrastructure wait is public NS propagation from Timeweb to SprintHost.
-- After the owner profile is completed and DNS resolves to SprintHost, verify HTTPS, `GET /api/notify.php` returning JSON `405`, then enter a rotated Telegram token directly in `api/config.php` and submit one real test note.
+- The technical-domain `403` is not the production health check; the paid main domain is serving correctly over HTTPS.
+- Timeweb domain NS was changed via API to SprintHost NS; Timeweb API reported `task_status=done` and public DNS now reflects the change.
+- SprintHost has accepted and created the main domain site. HTTPS and the PHP route are now externally verified.
+- Remaining launch step: rotate the Telegram token in BotFather, enter it directly in `api/config.php`, and submit one real test note.
 
 ## Current RF hosting state, 2026-07-09
 
