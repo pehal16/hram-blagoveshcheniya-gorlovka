@@ -13,6 +13,15 @@ This file is the durable context for future Codex sessions. Read it before chang
 - Vite uses `base: './'` so assets work on GitHub Pages subpaths.
 - The current design is the modern calm redesign, not the first rough version.
 
+## Session continuity and secret handling
+
+- At the start of every new chat for this project, read this file and `C:\Users\АМ\Documents\Сайт Церкви\ПАМЯТЬ_ПРОЕКТА.md`, then check `git status`, the current branch, and the latest commit before making changes.
+- Never store, repeat, commit, or add Telegram tokens, FTP passwords, hosting API keys, payment credentials, or other secrets to project memory, GitHub, source files, screenshots, or chat messages.
+- Telegram secret location: SprintHost production `api/config.php`, entered by the owner through the hosting panel. The repository contains only `config.example.php` with blank secret fields.
+- FTP password and hosting-panel session are owner-only credentials and are never recorded in project files.
+- If a secret is exposed in chat, treat it as compromised and rotate it in the provider dashboard before the next public launch step.
+- Current favicon: `public/favicon.svg`, a custom blue-and-gold Annunciation/church mark. It was deployed to the SprintHost document root on 2026-07-12.
+
 ## Authoritative launch decision, 2026-07-11
 
 ## Verified production state, 2026-07-12
@@ -33,14 +42,14 @@ This file is the durable context for future Codex sessions. Read it before chang
 - SprintHost Free is suitable only for staging. The verified minimum production tariff is `X-1`: 190 RUB/month or 149 RUB/month when paid annually (1,788 RUB/year), with PHP, SSL, and 30-day backups.
 - Telegram is the only notification channel for the first launch. The site does not store note submissions in a database.
 - The current SBP link does not provide automatic payment confirmation. A visitor marks payment as completed, the note is delivered to Telegram, and the responsible person verifies the bank receipt manually.
-- Before production, rotate the Telegram bot token in BotFather because the old token was exposed in chat. Enter the new token only in SprintHost `api/config.php`; never send it in chat or commit it.
+- The Telegram bot token was exposed in chat. The owner must rotate it in BotFather before relying on the current token for public operation; enter the replacement only in SprintHost `api/config.php` and never send it in chat or commit it.
 - SprintHost accepted and created the main site `благовещение-горловка.рф`; its document root is `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html`.
 - The current frontend build, `api/notify.php`, a token-free `api/config.php`, and Apache access guards were uploaded to that document root on 2026-07-11. Remote FTP listings confirmed all expected files.
 - After owner verification, DNS resolves to SprintHost (`ns1.sprinthost.ru`, `ns2.sprinthost.ru`, `ns3.sprinthost.net`, `ns4.sprinthost.net`) and the deployed frontend serves successfully.
 - HTTP `/api/notify.php` is executing PHP correctly: GET returns `405 Method Not Allowed`, and an invalid JSON POST returns `400 Invalid order payload`.
 - The user paid for and activated SprintHost `X-1` on 2026-07-11. The free Let's Encrypt Wildcard switch is enabled for the main domain.
 - The SprintHost technical domain returns `403` while account owner data is unfilled. SprintHost's official setup guide requires real owner details; the user must enter those details personally in the hosting profile.
-- HTTPS is verified externally: the site returns `200 OK` and `https://.../api/notify.php` returns the expected JSON `405`. Telegram delivery still requires a newly rotated bot token entered directly into the server-side config.
+- HTTPS is verified externally: the site returns `200 OK` and `https://.../api/notify.php` returns the expected JSON `405`. Telegram delivery was verified end-to-end on 2026-07-12; token rotation remains a security follow-up because the previous token was exposed.
 
 ## Product brief
 
