@@ -3,9 +3,10 @@
 Актуальный сайт для предпросмотра и подготовки запуска:
 
 - GitHub Pages: `https://pehal16.github.io/hram-blagoveshcheniya-gorlovka/`
+- Custom domain target: `https://благовещение-горловка.рф/`
 - Timeweb S3 technical preview: `https://blago-gorlovka-site.website.twcstorage.ru/`
 - Planned production domain: `https://www.благовещение-горловка.рф/`
-- Целевая схема запуска: недорогой отдельный российский PHP-хостинг для статического сайта и одного обработчика Telegram. Timeweb App Platform за 510 ₽/мес не заказываем. Существующие серверы аккаунта не используются, S3 остается техническим предпросмотром.
+- Целевая схема запуска: домен и DNS остаются в Timeweb, статическая часть публикуется через GitHub Pages. GitHub Pages не выполняет PHP, поэтому Telegram-обработчик должен работать на отдельном endpoint.
 - Основная оплата на текущем этапе: QR СБП `https://qr.nspk.ru/BS1A0047BC591PLI8SR9GDOSN5OGQ77S`
 - Robokassa пока не используется.
 - Записки отправляются ответственным после отметки пользователем оплаты по СБП.
