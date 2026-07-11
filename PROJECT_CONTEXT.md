@@ -26,6 +26,11 @@ This file is the durable context for future Codex sessions. Read it before chang
 - Telegram is the only notification channel for the first launch. The site does not store note submissions in a database.
 - The current SBP link does not provide automatic payment confirmation. A visitor marks payment as completed, the note is delivered to Telegram, and the responsible person verifies the bank receipt manually.
 - Before production, rotate the Telegram bot token in BotFather because the old token was exposed in chat. Enter the new token only in SprintHost `api/config.php`; never send it in chat or commit it.
+- SprintHost accepted and created the main site `благовещение-горловка.рф`; its document root is `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html`.
+- The current frontend build, `api/notify.php`, a token-free `api/config.php`, and Apache access guards were uploaded to that document root on 2026-07-11. Remote FTP listings confirmed all expected files.
+- As of 2026-07-11 17:33 MSK, public DNS still returns the old Timeweb NS and the old GitHub Pages target. Do not change the hosting layout while registry propagation is pending.
+- The SprintHost technical domain returns `403` while account owner data is unfilled. SprintHost's official setup guide requires real owner details; the user must enter those details personally in the hosting profile.
+- PHP and end-to-end Telegram delivery cannot be declared verified until the owner profile is completed, DNS reaches SprintHost, and a newly rotated bot token is entered directly into the server-side config.
 
 ## Product brief
 
@@ -116,18 +121,18 @@ Notification plan:
 - Production package: `output/timeweb-hosting-site.zip`; despite the historical filename, it works on a normal PHP hosting account.
 - `scripts/package-timeweb-hosting.ps1` defaults to the relative endpoint `/api/notify.php` so the same build works on a technical domain and on `благовещение-горловка.рф`.
 
-## SprintHost Free launch attempt, 2026-07-10
+## SprintHost launch state, 2026-07-11
 
 - SprintHost account login: `pehal`.
 - FTP server: `141.8.192.182`.
 - FTP user: `pehal`.
 - Do not store the FTP password or Telegram bot token in the repo.
-- Technical domain/folder: `pehal.xsph.ru`, `/domains/pehal.xsph.ru/public_html`.
-- Uploaded the current PHP-hosting package to the technical folder with `api/notify.php` and a production-only `api/config.php` containing Telegram settings. The local temp copy was deleted after upload.
-- The technical domain `http://pehal.xsph.ru/` currently returns `403 Forbidden` even though files and permissions are correct. SprintHost shows owner data as unfilled and the free-zone technical domain may require real passport/profile data before web access; do not fill personal data automatically.
+- Main domain/folder: `благовещение-горловка.рф`, `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html`.
+- Uploaded the current PHP-hosting package to the main domain folder with `api/notify.php`, a token-free `api/config.php`, and `api/.htaccess`. No Telegram secret is stored in the repository or deployment archive.
+- Technical-domain access still returns `403 Forbidden`. SprintHost shows owner data as unfilled; do not fill personal or passport data automatically.
 - Timeweb domain NS was changed via API to `ns1.sprinthost.ru`, `ns2.sprinthost.ru`, `ns3.sprinthost.net`, `ns4.sprinthost.net`; Timeweb API reported `task_status=done`.
-- As of 2026-07-10 22:20 MSK, public DNS still returns old Timeweb NS for `xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai`, so SprintHost still refuses to add `благовещение-горловка.рф` and asks to set SprintHost NS. Wait for DNS/registry propagation, then retry `Сайты -> Добавить сайт -> благовещение-горловка.рф -> Это мой домен -> Создать сайт`.
-- After the main domain is accepted by SprintHost, upload the same package contents to `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html` or the actual folder SprintHost creates, then test `/api/notify.php` and a real form submission to Telegram.
+- SprintHost has accepted and created the main domain site. The remaining infrastructure wait is public NS propagation from Timeweb to SprintHost.
+- After the owner profile is completed and DNS resolves to SprintHost, verify HTTPS, `GET /api/notify.php` returning JSON `405`, then enter a rotated Telegram token directly in `api/config.php` and submit one real test note.
 
 ## Current RF hosting state, 2026-07-09
 

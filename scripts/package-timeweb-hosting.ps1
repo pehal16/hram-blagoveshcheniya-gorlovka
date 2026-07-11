@@ -43,10 +43,16 @@ if (Test-Path $packageDir) {
 New-Item -ItemType Directory -Path $packageDir | Out-Null
 Copy-Item -Path (Join-Path $root "dist\*") -Destination $packageDir -Recurse -Force
 
+$githubPagesCname = Join-Path $packageDir "CNAME"
+if (Test-Path $githubPagesCname) {
+  Remove-Item -LiteralPath $githubPagesCname -Force
+}
+
 $apiDir = Join-Path $packageDir "api"
 New-Item -ItemType Directory -Path $apiDir | Out-Null
 Copy-Item -LiteralPath (Join-Path $notifySourceDir "notify.php") -Destination (Join-Path $apiDir "notify.php")
 Copy-Item -LiteralPath (Join-Path $notifySourceDir "config.example.php") -Destination (Join-Path $apiDir "config.example.php")
+Copy-Item -LiteralPath (Join-Path $notifySourceDir ".htaccess") -Destination (Join-Path $apiDir ".htaccess")
 
 if (Test-Path $archive) {
   Remove-Item -LiteralPath $archive -Force
