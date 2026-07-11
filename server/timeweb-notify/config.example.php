@@ -3,14 +3,10 @@ declare(strict_types=1);
 
 return [
     'allowed_origins' => [
-        'https://pehal16.github.io',
-        'https://blago-gorlovka-site.website.twcstorage.ru',
         'https://благовещение-горловка.рф',
         'https://www.благовещение-горловка.рф',
         'https://xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai',
         'https://www.xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai',
-        'https://api.благовещение-горловка.рф',
-        'https://api.xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai',
         'http://127.0.0.1:5173',
         'http://localhost:5173',
     ],

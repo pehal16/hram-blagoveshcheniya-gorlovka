@@ -13,6 +13,20 @@ This file is the durable context for future Codex sessions. Read it before chang
 - Vite uses `base: './'` so assets work on GitHub Pages subpaths.
 - The current design is the modern calm redesign, not the first rough version.
 
+## Authoritative launch decision, 2026-07-11
+
+- The production infrastructure must use Russian hosting services only.
+- The domain remains registered and paid in Timeweb through 2027-07-09.
+- Production hosting is SprintHost shared PHP hosting on the Russian server `vali`.
+- The frontend and `api/notify.php` are deployed together on the same SprintHost site. The frontend endpoint is the same-origin path `/api/notify.php`.
+- GitHub remains the source-code repository and backup history. GitHub Pages is a preview only and is not the production host.
+- Vercel, Cloudflare, Yandex Cloud, Timeweb S3, and Timeweb App Platform are not part of the production request route.
+- Timeweb NS was changed on 2026-07-11 to `ns1.sprinthost.ru` and `ns2.sprinthost.ru`. Timeweb confirms these values; public DNS propagation is still pending.
+- SprintHost Free is suitable only for staging. The verified minimum production tariff is `X-1`: 190 RUB/month or 149 RUB/month when paid annually (1,788 RUB/year), with PHP, SSL, and 30-day backups.
+- Telegram is the only notification channel for the first launch. The site does not store note submissions in a database.
+- The current SBP link does not provide automatic payment confirmation. A visitor marks payment as completed, the note is delivered to Telegram, and the responsible person verifies the bank receipt manually.
+- Before production, rotate the Telegram bot token in BotFather because the old token was exposed in chat. Enter the new token only in SprintHost `api/config.php`; never send it in chat or commit it.
+
 ## Product brief
 
 The site is for `ХРАМ БЛАГОВЕЩЕНИЯ ПРЕСВЯТОЙ БОГОРОДИЦЫ` with the subtitle `в Горловке`.
@@ -96,7 +110,7 @@ Notification plan:
 ## Cheapest launch decision, 2026-07-10
 
 - Email is postponed. Notes must be delivered only to the closed Telegram group.
-- The current zero-cost launch attempt uses SprintHost Free. If it becomes too limiting, the recommended stable budget option is SprintHost `База`: first month is a free trial, then 150 RUB/month or 120 RUB/month with annual payment, with PHP, SSL, backups, and a technical domain included.
+- The current zero-cost launch attempt uses SprintHost Free. As verified in the live panel on 2026-07-11, the recommended stable budget option is SprintHost `X-1`: 190 RUB/month or 149 RUB/month with annual payment, with PHP, SSL, and 30-day backups.
 - HostiMan Free is a zero-cost alternative, but activation requires a photo of an identity document, registration of another RU/RF domain with that provider, or an 80 RUB/month payment. Treat it as a temporary/testing option, not the preferred production launch.
 - The domain remains registered at Timeweb. Test on the hosting technical domain before changing DNS.
 - Production package: `output/timeweb-hosting-site.zip`; despite the historical filename, it works on a normal PHP hosting account.

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 const MAX_MESSAGE_LENGTH = 3900;
+const MAX_REQUEST_BYTES = 65536;
 
 function default_config(): array
 {
@@ -125,6 +126,11 @@ function json_response(int $status, array $body, array $config, string $origin):
 {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store, max-age=0');
+    header('Pragma: no-cache');
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: no-referrer');
+    header('X-Frame-Options: DENY');
     header('Access-Control-Allow-Origin: ' . cors_origin($config, $origin));
     header('Access-Control-Allow-Methods: POST, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type');
@@ -136,10 +142,20 @@ function json_response(int $status, array $body, array $config, string $origin):
 
 function parse_json_body(): array
 {
+    $declaredLength = isset($_SERVER['CONTENT_LENGTH']) ? (int) $_SERVER['CONTENT_LENGTH'] : 0;
+
+    if ($declaredLength > MAX_REQUEST_BYTES) {
+        throw new LengthException('Request body is too large');
+    }
+
     $raw = file_get_contents('php://input');
 
     if (!is_string($raw) || trim($raw) === '') {
         return [];
+    }
+
+    if (strlen($raw) > MAX_REQUEST_BYTES) {
+        throw new LengthException('Request body is too large');
     }
 
     $payload = json_decode($raw, true);
@@ -630,6 +646,8 @@ if ($method !== 'POST') {
 
 try {
     $payload = parse_json_body();
+} catch (LengthException $error) {
+    json_response(413, ['ok' => false, 'error' => 'Request body is too large'], $config, $origin);
 } catch (Throwable $error) {
     json_response(400, ['ok' => false, 'error' => 'Invalid JSON'], $config, $origin);
 }
