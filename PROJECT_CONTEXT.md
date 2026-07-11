@@ -29,6 +29,9 @@ This file is the durable context for future Codex sessions. Read it before chang
 - SprintHost accepted and created the main site `благовещение-горловка.рф`; its document root is `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html`.
 - The current frontend build, `api/notify.php`, a token-free `api/config.php`, and Apache access guards were uploaded to that document root on 2026-07-11. Remote FTP listings confirmed all expected files.
 - As of 2026-07-11 17:33 MSK, public DNS still returns the old Timeweb NS and the old GitHub Pages target. Do not change the hosting layout while registry propagation is pending.
+- After owner verification, DNS now resolves to SprintHost (`ns1.sprinthost.ru`, `ns2.sprinthost.ru`, `ns3.sprinthost.net`, `ns4.sprinthost.net`) and HTTP serves the deployed frontend with `200 OK`.
+- HTTP `/api/notify.php` is executing PHP correctly: GET returns `405 Method Not Allowed`, and an invalid JSON POST returns `400 Invalid order payload`.
+- SprintHost Free explicitly keeps SSL unavailable. Production HTTPS requires the paid `X-1` tariff; do not activate it without explicit user confirmation.
 - The SprintHost technical domain returns `403` while account owner data is unfilled. SprintHost's official setup guide requires real owner details; the user must enter those details personally in the hosting profile.
 - PHP and end-to-end Telegram delivery cannot be declared verified until the owner profile is completed, DNS reaches SprintHost, and a newly rotated bot token is entered directly into the server-side config.
 
