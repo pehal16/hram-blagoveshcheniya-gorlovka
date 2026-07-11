@@ -15,6 +15,14 @@ This file is the durable context for future Codex sessions. Read it before chang
 
 ## Authoritative launch decision, 2026-07-11
 
+## Verified production state, 2026-07-12
+
+- The public domain `https://благовещение-горловка.рф/` serves the current frontend from SprintHost over HTTPS.
+- The production frontend now uses the same-origin endpoint `/api/notify.php`; the old Vercel endpoint is no longer used by the SprintHost build.
+- `api/config.php` on SprintHost contains the Telegram configuration and remains outside the repository.
+- End-to-end test passed on 2026-07-12: the live form created order `Z-260711-4287`, returned `Записка отправлена на проверку`, and the PHP endpoint confirmed Telegram delivery. Browser console had no errors or warnings.
+- The first-launch notification route is therefore: public site -> SprintHost PHP -> closed Telegram group. Payment remains manual SBP reconciliation.
+
 - The production infrastructure must use Russian hosting services only.
 - The domain remains registered and paid in Timeweb through 2027-07-09.
 - Production hosting is SprintHost shared PHP hosting on the Russian server `vali`.
@@ -87,7 +95,7 @@ Current payment option:
 Notification plan:
 
 - Frontend posts orders to `VITE_ORDER_ENDPOINT`.
-- Current production notification endpoint: `https://site-livid-mu-36.vercel.app/api/notify`.
+- Historical preview notification endpoint: `https://site-livid-mu-36.vercel.app/api/notify` (not used by the current SprintHost production build).
 - GitHub Pages uses the repository variable `VITE_ORDER_ENDPOINT=https://site-livid-mu-36.vercel.app/api/notify`.
 - Local Vite testing uses ignored `.env.local` with the same `VITE_ORDER_ENDPOINT`; restart `npm run dev` after changing it.
 - Backend templates live in `server/timeweb-notify` for the RF PHP route and `server/yandex-notify` for the older Yandex/Vercel-compatible route.
@@ -134,7 +142,7 @@ Notification plan:
 - The technical-domain `403` is not the production health check; the paid main domain is serving correctly over HTTPS.
 - Timeweb domain NS was changed via API to SprintHost NS; Timeweb API reported `task_status=done` and public DNS now reflects the change.
 - SprintHost has accepted and created the main domain site. HTTPS and the PHP route are now externally verified.
-- Remaining launch step: rotate the Telegram token in BotFather, enter it directly in `api/config.php`, and submit one real test note.
+- Completed launch verification on 2026-07-12: the Telegram-configured SprintHost API received and delivered a live test note from the public domain.
 
 ## Current RF hosting state, 2026-07-09
 
