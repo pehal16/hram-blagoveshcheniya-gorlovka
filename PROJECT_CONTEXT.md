@@ -41,7 +41,7 @@ This file is the durable context for future Codex sessions. Read it before chang
 - Timeweb NS was changed on 2026-07-11 to SprintHost NS; public DNS now resolves to SprintHost.
 - SprintHost Free is suitable only for staging. The verified minimum production tariff is `X-1`: 190 RUB/month or 149 RUB/month when paid annually (1,788 RUB/year), with PHP, SSL, and 30-day backups.
 - Telegram is the only notification channel for the first launch. The site does not store note submissions in a database.
-- The current SBP link does not provide automatic payment confirmation. A visitor marks payment as completed, the note is delivered to Telegram, and the responsible person verifies the bank receipt manually.
+- The current SBP link does not provide automatic payment confirmation. A visitor must open the SBP payment link before the payment-confirmation checkbox becomes available; changing the service, names, or amount resets that step. The visitor then marks payment as completed, the note is delivered to Telegram, and the responsible person verifies the bank receipt manually.
 - The Telegram bot token was exposed in chat. The owner must rotate it in BotFather before relying on the current token for public operation; enter the replacement only in SprintHost `api/config.php` and never send it in chat or commit it.
 - SprintHost accepted and created the main site `благовещение-горловка.рф`; its document root is `/domains/xn----7sbbbgbecqaa9a4adj1anib2bzn.xn--p1ai/public_html`.
 - The current frontend build, `api/notify.php`, a token-free `api/config.php`, and Apache access guards were uploaded to that document root on 2026-07-11. Remote FTP listings confirmed all expected files.

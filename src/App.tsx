@@ -197,6 +197,7 @@ function App() {
   const [donationAmount, setDonationAmount] = useState('500')
   const [donorName, setDonorName] = useState('')
   const [notePrivacyAccepted, setNotePrivacyAccepted] = useState(false)
+  const [notePaymentLinkOpened, setNotePaymentLinkOpened] = useState(false)
   const [notePaymentConfirmed, setNotePaymentConfirmed] = useState(false)
   const [donationPrivacyAccepted, setDonationPrivacyAccepted] = useState(false)
   const [website, setWebsite] = useState('')
@@ -219,6 +220,7 @@ function App() {
     namesCount > 0 &&
     giverName.trim().length > 0 &&
     notePrivacyAccepted &&
+    notePaymentLinkOpened &&
     notePaymentConfirmed &&
     !noteAmountTooLow &&
     !isSubmitting
@@ -237,6 +239,17 @@ function App() {
     setActiveServiceId(service.id)
     setNoteKind(service.kinds[0])
     setNoteAmount(String(calculateMinimum(service, namesCount)))
+    resetNotePaymentStep()
+    setSubmission(initialSubmission)
+  }
+
+  function resetNotePaymentStep() {
+    setNotePaymentLinkOpened(false)
+    setNotePaymentConfirmed(false)
+  }
+
+  function openNotePayment() {
+    setNotePaymentLinkOpened(true)
     setNotePaymentConfirmed(false)
     setSubmission(initialSubmission)
   }
@@ -249,7 +262,7 @@ function App() {
     setNames(value)
     const nextCount = countNames(value)
     setNoteAmount(String(calculateMinimum(activeService, nextCount)))
-    setNotePaymentConfirmed(false)
+    resetNotePaymentStep()
     setSubmission(initialSubmission)
   }
 
@@ -600,7 +613,7 @@ function App() {
                 value={noteAmount}
                 onChange={(event) => {
                   setNoteAmount(event.target.value)
-                  setNotePaymentConfirmed(false)
+                  resetNotePaymentStep()
                 }}
                 required
               />
@@ -615,7 +628,13 @@ function App() {
             )}
 
             <div className="note-payment-step">
-              <a className="secondary-button" href={sbpPaymentUrl} target="_blank" rel="noreferrer">
+              <a
+                className="secondary-button"
+                href={sbpPaymentUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={openNotePayment}
+              >
                 <QrCode size={18} />
                 Оплатить по СБП
                 <ExternalLink size={16} />
@@ -641,11 +660,13 @@ function App() {
                 checked={notePaymentConfirmed}
                 onChange={(event) => setNotePaymentConfirmed(event.target.checked)}
                 type="checkbox"
+                disabled={!notePaymentLinkOpened}
                 required
               />
               <span>
-                Я оплатил(а) указанную сумму по СБП и понимаю, что поступление будет сверено
-                вручную.
+                {notePaymentLinkOpened
+                  ? 'Я оплатил(а) указанную сумму по СБП и понимаю, что поступление будет сверено вручную.'
+                  : 'Сначала откройте оплату по СБП, затем вернитесь и подтвердите оплату.'}
               </span>
             </label>
 
